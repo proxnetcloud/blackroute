@@ -16,7 +16,11 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::post('/recorder', 'Auth\RegisterController@recorder')->name('recorder');
+//Route::group(['prefix' => 'Auth'], function() {
+//    Route::post('/recorder', 'Auth\RegisterController@recorder')->name('recorder');
+//});
+//Route::post('/recorder', 'HomeController@recorder')->name('recorder');
+Route::post('/recorder', 'SystemController@recorder')->name('recorder');
 //Route::get('/home', 'Auth\RegisterController@_create')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'company_id', 'cpf', 'rg', 'phone',
     ];
 
     /**
@@ -41,9 +41,123 @@ class User extends Authenticatable
     {
         return $this->fillable;
     }
-    public function fields()
+    public static function fields()
     {
-        return $this->_1579738929956();
+        return (new User())->_1579738929956();
+    }
+    public static function form()
+    {
+        //$options =
+        $fields = [];
+
+        $field = 'name';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Nome',
+            'placeholder' => 'Nome',
+            'options' => [
+                [
+                'value' => '',
+                'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+
+        $field = 'email';
+        $$field = [
+            'type' => 'email',
+            'name' => $field,
+            'label' => 'Email',
+            'placeholder' => 'Email',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+
+        $field = 'password';
+        $$field = [
+            'type' => 'password',
+            'name' => $field,
+            'label' => 'Senha',
+            'placeholder' => 'Senha',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+
+//        // 'company_id', 'cpf', 'rg', 'phone',
+//        $field = 'company_id';
+//        $$field = [
+//            'type' => 'number',
+//            'name' => $field,
+//            'label' => 'ID do negócio',
+//            'placeholder' => 'ID do negócio',
+//            'options' => [
+//                [
+//                    'value' => '',
+//                    'text' => '',
+//                ],
+//            ],
+//        ];
+//        $fields[] = $$field;
+
+        // 'company_id', 'cpf', 'rg', 'phone',
+        $field = 'cpf';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'CPF',
+            'placeholder' => 'CPF',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+        // 'company_id', 'cpf', 'rg', 'phone',
+        $field = 'rg';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'RG',
+            'placeholder' => 'RG',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+        // 'company_id', 'cpf', 'rg', 'phone',
+        $field = 'phone';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Telefone',
+            'placeholder' => 'Telefone',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+
+        return [$fields];
     }
 
     /**
@@ -61,5 +175,10 @@ class User extends Authenticatable
     public function _company()
     {
         return $this->belongsTo('App\Company');
+    }
+
+    public function field()
+    {
+        return $this->hasMany('App\Field');
     }
 }

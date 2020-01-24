@@ -208,7 +208,8 @@ h1 .subtitle {
 
 body,
 .wrapper {
-    min-height: 100vh;
+    /*min-height: 100vh;*/
+    min-height: 120vh;
     position: relative;
 }
 

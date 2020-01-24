@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Requests\UserRequest;
-use http\Env\Request;
+//use http\Env\Request;
 use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -85,14 +87,33 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UserRequest $request, User  $user)
+//    public function update(UserRequest $request, User  $user)
+//    {
+//        $user->update(
+//            $request->merge(['password' => Hash::make($request->get('password'))])
+//                ->except([$request->get('password') ? '' : 'password']
+//        ));
+//
+//        return redirect()->route('user.index')->withStatus(__('User successfully updated.'));
+//    }
+    // para permitir gerar alias
+    public function _1579896071037(Request $request,$id)
     {
-        $user->update(
-            $request->merge(['password' => Hash::make($request->get('password'))])
-                ->except([$request->get('password') ? '' : 'password']
-        ));
-
-        return redirect()->route('user.index')->withStatus(__('User successfully updated.'));
+        return SystemController::__update(User::class,$id,$request);
+    }
+    public function _update(Request $request,$id)
+    {
+        return $this->_1579896071037($request,$id);
+    }
+    public function update(Request $request,$id)
+    {
+        //
+        $return = $this->_1579896071037($request,$id);
+        if ( $return[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #123.');
+        }
+        return redirect()->back()->with('message',$request->_message);
     }
 
     /**

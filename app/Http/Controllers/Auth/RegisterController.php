@@ -9,6 +9,10 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use App\Field;
+use App\Company;
+use App\Address;
+
 use Illuminate\Support\Facades\Request;
 
 class RegisterController extends Controller
@@ -75,6 +79,9 @@ class RegisterController extends Controller
 
     public function recorder(Request $request)
     {
+        return 'ok';
+        $user = Auth::user();
+
         //var_dump($request);
         //return;
         //echo $request->email;
@@ -102,33 +109,42 @@ class RegisterController extends Controller
         //criar a company
         //$company = new Company();
         //$company->save();
-        $return = (new CompanyController())->_store(new Request());;
+        //$return = (new CompanyController())->_store(new Request());;
+        $request->user_id = $user->id;
+        $return = (new CompanyController())->_store($request);;
         if ( $return[0] == 'error' )
         {
             return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
         }
         $company = $return['object'];
         //criar user
-        $return = (new UserController())->_store($request);
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        $user = $return['user'];
+//        $return = (new UserController())->_store($request);
+//        if ( $return[0] == 'error' )
+//        {
+//            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+//        }
+//        $user = $return['user'];
         //$user = new User();
         //$user->password = Hash::make($request->password);
         //$user->email = $request->email;
         //$user->save();
 
-        //atualizar company
-        $aux = new Request();
-        $aux->user_id = $user->id;
-        $return = (new CompanyController())->_update($aux,$company->id);;
+        $return = (new UserController())->_update($request,$user->id);;
         if ( $return[0] == 'error' )
         {
             return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
         }
-        $company = $return['object'];
+        $user = $return['object'];
+
+        //atualizar company
+//        $aux = new Request();
+//        $aux->user_id = $user->id;
+//        $return = (new CompanyController())->_update($aux,$company->id);;
+//        if ( $return[0] == 'error' )
+//        {
+//            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+//        }
+//        $company = $return['object'];
         //$company->user_id = $user->id;
         //$company->save();
 
@@ -137,7 +153,7 @@ class RegisterController extends Controller
         //        "Você foi cadastrado com sucesso com nome " . $user->username . " .");
         return redirect()->back()
             ->with("message",
-                "Você foi cadastrado com sucesso com nome " . $user->username . " .");
+                "Você foi cadastrado com sucesso com email " . $user->email . " .");
 
         //$aux = new Request();
         //$request = $aux;
@@ -151,17 +167,118 @@ class RegisterController extends Controller
     public static function _create()
     {
         //
+        $aux = [];
 
-        $fields = [
-            'type' => '',
-            'name' => '',
-            'label' => '',
-            'placeholder' => '',
-            'options' => [
-                'name' => '',
-                'text' => '',
-            ],
-        ];
+        //$fields = User::fields();
+
+        //$fields2 = Field::fields();
+        //$aux = [];
+        //$i = 0;
+
+        //$fields = Field::where('table','user');
+        $fields = (Object)User::form()[0];
+        foreach ($fields as $field)
+        {
+            $field = (Object)$field;
+            if ( $field->name != 'cpf'
+                &&
+                $field->name != 'rg'
+                &&
+                $field->name != 'phone'
+            )
+            {
+                continue;
+            }
+            $options = [];
+            if ( $field->type == 'select' or $field->type == 'radio' )
+            {
+                foreach ($field->options as $option )
+                {
+                    $options[] = [
+                        'value' => $option->value,
+                        'text' => $option->text,
+                    ];
+                }
+            }
+            $aux[] = [
+                'type' => $field->type,
+                'name' => $field->name,
+                'label' => $field->label,
+                'placeholder' => $field->placeholder,
+                'options' => $options,
+            ];
+        }
+        //$fields = Field::where('table','company');
+        $fields = Company::form()[0];
+        foreach ($fields as $field)
+        {
+            $field = (Object)$field;
+            if ( $field->name != 'cnpj'
+                &&
+                $field->name != 'business_name'
+                &&
+                $field->name != 'billing'
+            )
+            {
+                continue;
+            }
+            $options = [];
+            if ( $field->type == 'select' or $field->type == 'radio' )
+            {
+                foreach ($field->options as $option )
+                {
+                    $options[] = [
+                        'value' => $option->value,
+                        'text' => $option->text,
+                    ];
+                }
+            }
+            $aux[] = [
+                'type' => $field->type,
+                'name' => $field->name,
+                'label' => $field->label,
+                'placeholder' => $field->placeholder,
+                'options' => $options,
+            ];
+        }
+        //$fields = Field::where('table','address');
+        $fields = Address::form()[0];
+        foreach ($fields as $field)
+        {
+            $field = (Object)$field;
+            $options = [];
+            if ( $field->type == 'select' or $field->type == 'radio' )
+            {
+                foreach ($field->options as $option )
+                {
+                    $options[] = [
+                        'value' => $option->value,
+                        'text' => $option->text,
+                    ];
+                }
+            }
+            $aux[] = [
+                'type' => $field->type,
+                'name' => $field->name,
+                'label' => $field->label,
+                'placeholder' => $field->placeholder,
+                'options' => $options,
+            ];
+        }
+
+        $fields = $aux;
+
+        //base
+        //$field = [
+        //    'type' => '',
+        //    'name' => '',
+        //    'label' => '',
+        //    'placeholder' => '',
+        //    'option' => [
+        //        'value' => '',
+        //        'text' => '',
+        //    ],
+        //];
 
         return view('form',
             [

@@ -32,18 +32,23 @@
         <link href="{{ asset('light-bootstrap/css/demo.css') }}" rel="stylesheet" />
     </head>
 
-    <body>
-        <div class="wrapper @if (!auth()->check() || request()->route()->getName() == ""  ) wrapper-full-page @endif">
+    @if(!isset($show_menu))
+        @php
+            $show_menu = true;
+        @endphp
+    @endif
 
+    <body @if($show_menu) style="min-height: 120vh!important;" @endif>
+        <div class="wrapper @if (!auth()->check() || request()->route()->getName() == ""  ) wrapper-full-page @endif">
             @if (auth()->check() && request()->route()->getName() != "" && $show_menu )
                 @include('layouts.navbars.sidebar')
                 @include('pages/sidebarstyle')
             @endif
 
             <div class="@if (auth()->check() && request()->route()->getName() != ""  && $show_menu) main-panel @endif">
-                @include('layouts.navbars.navbar')
+                @if($show_menu)@include('layouts.navbars.navbar')@endif
                 @yield('content')
-                @include('layouts.footer.nav')
+                @if($show_menu)@include('layouts.footer.nav')@endif
             </div>
 
         </div>

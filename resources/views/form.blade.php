@@ -7,6 +7,9 @@
 @endphp
 @section('content')
     <div class="full-page register-page section-image" data-color="orange" data-image="{{ asset('light-bootstrap/img/bg5.jpg') }}">
+{{--    <div class="full-page register-page" data-color="orange" data-image="{{ asset('light-bootstrap/img/bg5.jpg') }}">--}}
+{{--    <div class="register-page section-image" data-color="orange" data-image="{{ asset('light-bootstrap/img/bg5.jpg') }}">--}}
+{{--    <div class="full-page register-page section-image" data-color="orange">--}}
         <div class="content">
             <div class="container">
                 <div class="card card-register card-plain text-center">
@@ -48,36 +51,22 @@
                                 </div>
                             </div>
                             <div class="col-md-4 mr-auto">
+{{--                            <div class="col-md-4 mr-auto" style="width: 50%!important;">--}}
                                 <form method="POST" action="{{ route($route) }}">
                                     @csrf
                                     <div class="card card-plain">
                                         <div class="content">
+                                            @foreach($fields as $field)
+                                            @if($field['type'] == 'select')
+                                            @else
                                             <div class="form-group">
-                                                <input type="text" name="name" id="name" class="form-control" placeholder="{{ __('Name') }}" value="{{ old('name') }}" required autofocus>
+                                                <input type="{{$field['type']}}" name="{{$field['name']}}" class="form-control" placeholder="{{$field['placeholder']}}" required>
                                             </div>
-
-                                            <div class="form-group">   {{-- is-invalid make border red --}}
-                                                <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter email" class="form-control" required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <input type="password" name="password" class="form-control" required >
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="password" name="password_confirmation" placeholder="Password Confirmation" class="form-control" required autofocus>
-                                            </div>
-                                            <div class="form-group d-flex justify-content-center">
-                                                <div class="form-check rounded col-md-10 text-left">
-                                                    <label class="form-check-label text-white d-flex align-items-center">
-                                                        <input class="form-check-input" name="agree" type="checkbox" required >
-                                                        <span class="form-check-sign"></span>
-                                                        <b>{{ __('Agree with terms and conditions') }}</b>
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            @endif
+                                            @endforeach
 
                                             <div class="footer text-center">
-                                                <button type="submit" class="btn btn-fill btn-neutral btn-wd">{{ __('Create Free Account') }}</button>
+                                                <button type="submit" class="btn btn-fill btn-neutral btn-wd">Gravar/Salvar</button>
                                             </div>
                                         </div>
                                     </div>

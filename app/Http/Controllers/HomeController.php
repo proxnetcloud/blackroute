@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth\RegisterController;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,32 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return Auth\RegisterController::_create();
+        //return redirect()->route('');
+        return view('dashboard');
+    }
+
+    //verifica se o user já preencheu os dados
+    //...e redireciona para o local apropriado
+    public function initial()
+    {
+        return view('auth.form');
+        //return view('form',
+        //    [
+        //        'route'=>'',
+        //        'fields'=>
+        //            [
+        //                'type' => '',
+        //                'name' => '',
+        //                'label' => '',
+        //                'placeholder' => '',
+        //                'options' =>
+        //                    [
+        //                        'name' => '',
+        //                        'text' => '',
+        //                    ],
+        //            ]
+        //    ]);
+        return redirect()->route('dashboard');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Company;
+use App\Address;
 
 class SystemController extends Controller
 {
@@ -178,6 +179,12 @@ class SystemController extends Controller
         }
         $user = $return['object'];
 
+        $return = (new AddressController())->_store($request);;
+        if ( $return[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+        }
+        $address = $return['object'];
         //atualizar company
 //        $aux = new Request();
 //        $aux->user_id = $user->id;

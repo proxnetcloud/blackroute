@@ -16,6 +16,11 @@ class Address extends Model
         'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
     ];
 
+    public static function fields()
+    {
+        return (new Address())->fillable;
+    }
+
     public static function form()
     {
         //$options =
@@ -53,7 +58,7 @@ class Address extends Model
         ];
         $fields[] = $$field;
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
-        $field = '';
+        $field = 'zip';
         $$field = [
             'type' => 'zip',
             'name' => $field,
@@ -128,7 +133,7 @@ class Address extends Model
         ];
         $fields[] = $$field;
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
-        $field = '';
+        $field = 'country';
         $$field = [
             'type' => 'country',
             'name' => $field,

@@ -246,6 +246,25 @@ class RegisterController extends Controller
         foreach ($fields as $field)
         {
             $field = (Object)$field;
+            if ( $field->name != 'address'
+                &&
+                $field->name != 'number'
+                &&
+                $field->name != 'zip'
+                &&
+                $field->name != 'neighborhood'
+                &&
+                $field->name != 'city'
+                &&
+                $field->name != 'complement'
+                &&
+                $field->name != 'state'
+                &&
+                $field->name != 'country'
+            )
+            {
+                continue;
+            }
             $options = [];
             if ( $field->type == 'select' or $field->type == 'radio' )
             {
@@ -284,6 +303,7 @@ class RegisterController extends Controller
             [
                 'route'=>'recorder',
                 'fields'=> $fields,
+                'register' => '',
             ]);
         //return view('auth.form');
     }

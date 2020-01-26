@@ -17,7 +17,40 @@ Tip 2: you can also add an image using data-image tag
                     <p>{{ __("Dashboard") }}</p>
                 </a>
             </li>
-           
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#client" @if($activeButton =='client') aria-expanded="true" @endif>
+                    <i>
+{{--                        <img src="{{ asset('light-bootstrap/img/laravel.svg') }}" style="width:25px">--}}
+                    </i>
+                    <p>
+{{--                        {{ __('Laravel example') }}--}}
+                        Cliente
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse @if($activeButton =='client') show @endif" id="client">
+                    <ul class="nav">
+                        <li class="nav-item @if($activePage == 'register_client') active @endif">
+                            <a class="nav-link" href="{{route('client.create')}}">
+{{--                                <i class="nc-icon nc-single-02"></i>--}}
+{{--                                <p>{{ __("User Profile") }}</p>--}}
+                                <p>&nbsp;&nbsp;Cadastrar</p>
+{{--                                @if('modo detalhado ativo')--}}
+{{--                                    <p>Cadastrar Client</p>--}}
+{{--                                @endif--}}
+                            </a>
+                        </li>
+{{--                        <li class="nav-item @if($activePage == 'user-management') active @endif">--}}
+{{--                            <a class="nav-link" href="{{route('user.index')}}">--}}
+{{--                                <i class="nc-icon nc-circle-09"></i>--}}
+{{--                                <p>{{ __("User Management") }}</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+                    </ul>
+                </div>
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#laravelExamples" @if($activeButton =='laravel') aria-expanded="true" @endif>
                     <i>

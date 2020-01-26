@@ -45,6 +45,7 @@ class User extends Authenticatable
     {
         return (new User())->_1579738929956();
     }
+
     public static function form()
     {
         //$options =

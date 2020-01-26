@@ -41,14 +41,18 @@
     <body @if($show_menu) style="min-height: 120vh!important;" @endif>
         <div class="wrapper @if (!auth()->check() || request()->route()->getName() == ""  ) wrapper-full-page @endif">
             @if (auth()->check() && request()->route()->getName() != "" && $show_menu )
+{{--            @if (auth()->check() && request()->route()->getName() != "" )--}}
                 @include('layouts.navbars.sidebar')
                 @include('pages/sidebarstyle')
             @endif
 
             <div class="@if (auth()->check() && request()->route()->getName() != ""  && $show_menu) main-panel @endif">
+{{--            <div class="@if (auth()->check() && request()->route()->getName() != "") main-panel @endif">--}}
                 @if($show_menu)@include('layouts.navbars.navbar')@endif
+{{--                @include('layouts.navbars.navbar')--}}
                 @yield('content')
                 @if($show_menu)@include('layouts.footer.nav')@endif
+{{--                @include('layouts.footer.nav')--}}
             </div>
 
         </div>

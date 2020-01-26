@@ -14,7 +14,21 @@ class Address extends Model
      */
     protected $fillable = [
         'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
+        'condominium','apartment','people_id',
     ];
+
+    /**
+     * Get the record associated with this.
+     */
+    public function _people()
+    {
+        return $this->hasOne('App\People');
+    }
+
+    public function people()
+    {
+        return $this->belongsTo('App\People');
+    }
 
     public static function fields()
     {

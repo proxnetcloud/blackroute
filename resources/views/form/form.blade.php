@@ -37,7 +37,66 @@
 
                                             {{--                                            <h6 class="heading-small text-muted mb-4">{{ __('User information') }}</h6>--}}
 
+                                            @php
+                                                $tabs = [];
+                                            @endphp
+                                            @foreach($fields as $field)
+                                                @php
+                                                    $tabs[$field['tab']['name']] =
+                                                        ['tab_label'=>$field['tab']['label']
+                                                            ,'fields'=>''];
+                                                @endphp
+                                                @foreach($field as $fiel)
+                                                    @if($field['type'] == 'select')
+                                                        @php
+                                                        $tabs[$field['label']['name']]['fields'] .=
+                                                        '
+                                                        <div class="form-group'. $errors->has('name') ? ' has-danger' : '' .'">
+                                                            <label class="form-control-label" for="input-'.$field['name'].'">
+                                                            '.
+                                                                $field['label']
+                                                            .'
+                                                            </label>
+                                                            <select type="text" name="'.$field['name'].'" id="input-'.$field['name'].'" class="form-control'. $errors->has('name') ? ' is-invalid' : '' .'" placeholder="" value="" required autofocus>
+                                                        ';
+                                                        @endphp
+                                                                @foreach($field['options'] as $option)
+                                                            @php
+                                                                $tabs[$field['label']['name']]['fields'] .=
+                                                                '
+                                                                  <option value="'.$option['value'].'">'.$option['text'].'</option>
+                                                            ';
+                                                            @endphp
+                                                                @endforeach
+                                                            </select>
 
+                                                            @include('alerts.feedback', ['field' => 'name'])
+                                                        </div>
+                                                    @else
+                                                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+                                                            <label class="form-control-label" for="input-{{$field['name']}}">
+                                                                                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}
+                                                                {{$field['label']}}
+                                                            </label>
+                                                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
+                                                            @php
+                                                                if(!isset($field['value']) && count($values) > 0)
+                                                                {
+                                                                    $aux3 = $field['name'];
+                                                                    $field['value'] = $values[$aux3];
+                                                                }
+                                                                else
+                                                                {
+                                                                    $field['value'] = '';
+                                                                }
+                                                            @endphp
+                                                            <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>
+
+                                                            @include('alerts.feedback', ['field' => 'name'])
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            @endforeach
 
 
                                             <ul class="nav nav-tabs navform" id="myTab" role="tablist">
@@ -48,7 +107,13 @@
                                                         $tabs = [];
                                                     }
                                                 @endphp
-                                                @foreach($tabs as $tab)
+{{--                                                @foreach($tabs as $tab)--}}
+                                                @foreach($fields as $tab_name => $field)
+                                                @php
+                                                    $tab = [];
+                                                    $tab['name'] = $tab_name;
+                                                    $tab['label'] = $field['tab_label'];
+                                                @endphp
                                                 <li class="nav-item">
                                                     <a class="nav-link @if($i) active @endif" id="{{$tab['name']}}-tab" data-toggle="tab" href="#{{$tab['name']}}" role="tab"
                                                        aria-controls="{{$tab}}"
@@ -83,64 +148,64 @@
                                                         $i = 0;
                                                     @endphp
                                                     <div class="pl-lg-4">
-                                                        @foreach($fields as $field)
-                                                            @if($field['type'] == 'select')
-                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                                                    <label class="form-control-label" for="input-name">
-                                                                        {{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
-                                                                        {{$field['label']}}
-                                                                    </label>
-                                                                    {{--                                        <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
-                                                                    <select type="text" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
-                                                                        @foreach($field['options'] as $option)
-                                                                            <option value="{{$option['value']}}">{{$option['text']}}</option>
-                                                                        @endforeach
-                                                                    </select>
+{{--                                                        @foreach($fields as $field)--}}
+{{--                                                            @if($field['type'] == 'select')--}}
+{{--                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
+{{--                                                                    <label class="form-control-label" for="input-name">--}}
+{{--                                                                        --}}{{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
+{{--                                                                        {{$field['label']}}--}}
+{{--                                                                    </label>--}}
+{{--                                                                    --}}{{--                                        <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+{{--                                                                    <select type="text" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+{{--                                                                        @foreach($field['options'] as $option)--}}
+{{--                                                                            <option value="{{$option['value']}}">{{$option['text']}}</option>--}}
+{{--                                                                        @endforeach--}}
+{{--                                                                    </select>--}}
 
-                                                                    @include('alerts.feedback', ['field' => 'name'])
-                                                                </div>
-                                                            @else
-                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                                                    <label class="form-control-label" for="input-{{$field['name']}}">
-                                                                        {{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
-                                                                        {{$field['label']}}
-                                                                    </label>
-                                                                    {{--                                        <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
-                                                                    @php
-                                                                        if(!isset($field['value']) && count($values) > 0)
-                                                                        {
-                                                                            $aux3 = $field['name'];
-                                                                            $field['value'] = $values[$aux3];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            $field['value'] = '';
-                                                                        }
-                                                                    @endphp
-                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>
+{{--                                                                    @include('alerts.feedback', ['field' => 'name'])--}}
+{{--                                                                </div>--}}
+{{--                                                            @else--}}
+{{--                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
+{{--                                                                    <label class="form-control-label" for="input-{{$field['name']}}">--}}
+{{--                                                                        --}}{{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
+{{--                                                                        {{$field['label']}}--}}
+{{--                                                                    </label>--}}
+{{--                                                                    --}}{{--                                        <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+{{--                                                                    @php--}}
+{{--                                                                        if(!isset($field['value']) && count($values) > 0)--}}
+{{--                                                                        {--}}
+{{--                                                                            $aux3 = $field['name'];--}}
+{{--                                                                            $field['value'] = $values[$aux3];--}}
+{{--                                                                        }--}}
+{{--                                                                        else--}}
+{{--                                                                        {--}}
+{{--                                                                            $field['value'] = '';--}}
+{{--                                                                        }--}}
+{{--                                                                    @endphp--}}
+{{--                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>--}}
 
-                                                                    @include('alerts.feedback', ['field' => 'name'])
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
+{{--                                                                    @include('alerts.feedback', ['field' => 'name'])--}}
+{{--                                                                </div>--}}
+{{--                                                            @endif--}}
+{{--                                                        @endforeach--}}
 
-                                                        {{--                                    <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
-                                                        {{--                                        <label class="form-control-label" for="input-name">--}}
-                                                        {{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
-                                                        {{--                                        </label>--}}
-                                                        {{--                                        <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+                                                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+                                                            <label class="form-control-label" for="input-name">
+                                                                <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}
+                                                            </label>
+                                                            <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
 
-                                                        {{--                                        @include('alerts.feedback', ['field' => 'name'])--}}
-                                                        {{--                                    </div>--}}
-                                                        {{--                                    <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">--}}
-                                                        {{--                                        <label class="form-control-label" for="input-email"><i class="w3-xxlarge fa fa-envelope-o"></i>{{ __('Email') }}</label>--}}
-                                                        {{--                                        <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>--}}
+                                                            @include('alerts.feedback', ['field' => 'name'])
+                                                        </div>
+                                                        <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                                            <label class="form-control-label" for="input-email"><i class="w3-xxlarge fa fa-envelope-o"></i>{{ __('Email') }}</label>
+                                                            <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', auth()->user()->email) }}" required>
 
-                                                        {{--                                        @include('alerts.feedback', ['field' => 'email'])--}}
-                                                        {{--                                    </div>--}}
-{{--                                                        <div class="text-center">--}}
-{{--                                                            <button type="submit" class="btn btn-default mt-4">{{ __('Save') }}</button>--}}
-{{--                                                        </div>--}}
+                                                            @include('alerts.feedback', ['field' => 'email'])
+                                                        </div>
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-default mt-4">{{ __('Save') }}</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 @endforeach

@@ -374,13 +374,13 @@ class SystemController extends Controller
 //                            $ModelFields['fields'])) != false )
                         $aux2);
 
-                    $error = new Error();
-                    $error->value = json_encode($arr);
-                    $error->save();
+//                    $error = new Error();
+//                    $error->value = json_encode($arr);
+//                    $error->save();
 
-                    $error = new Error();
-                    $error->value = array_search(1, $arr);
-                    $error->save();
+//                    $error = new Error();
+//                    $error->value = array_search(1, $arr);
+//                    $error->save();
 
                     if (array_search(1, $arr) === false and $ModelFields['fields'] != []) {
                         continue;
@@ -407,6 +407,10 @@ class SystemController extends Controller
                     //error = Cannot use object of type stdClass as array
 //                $aux[] = (Object)[
                     $aux[] = [
+                        'tab' => [
+                            'name'=>$aux4['name'],
+                            'label'=>$aux4['label'],
+                        ],
                         'type' => $field->type,
                         'name' => $field->name,
                         'label' => $field->label,
@@ -415,17 +419,20 @@ class SystemController extends Controller
                     ];
                 }
             }
-            $aux4['fields'] = $aux;
+//            $aux4['fields'] = $aux;
             $tabs[] = $aux4;
         }
 //        $tabs
-//        $fields = $aux;
+        $fields = $aux;
 //        return ['error','object'=>$object];
-
+        echo '<pre>';
+        var_dump($fields);
+        echo '<pre>';
+        return;
         return view($form,
             [
                 'route'=>$route,
-//                'fields'=> $fields,
+                'fields'=> $fields,
                 'tabs'=> $tabs,
                 'values' => $values,
                 'activePage' => $params['activePage'],

@@ -275,9 +275,6 @@
 {{--                                                                            @if($model['action']['option']==$option['value'])--}}
 {{--                                                                            @if($action['select']==$field['name'])--}}
 {{--                                                                        @foreach($actions as $action)--}}
-                                                                        @foreach($actions as $_action)
-                                                                            @foreach($_action as $action)
-                                                                            @if($action['select']==$select['field'])
                                                                                 <script>
                                                                                     function hide_for_{{$field['name']}}_{{$option['value']}}() {
 {{--                                                                                        @foreach($actions as $action)--}}
@@ -294,16 +291,19 @@
                                                                                     }
                                                                                     function show_for_{{$field['name']}}_{{$option['value']}}() {
                                                                                         {{--document.getElementById('{{$action['id']}}').style.display = "show";--}}
+                                                                                        @foreach($actions as $_action)
+                                                                                        @foreach($_action as $action)
+                                                                                        @if($action['select']==$select['field'])
                                                                                         @if($action['option']==$option['value'])
                                                                                         document.getElementById('{{$action['id']}}').style.display = "block";
                                                                                         @endif
+                                                                                        @endif
+                                                                                        @endforeach
+                                                                                        @endforeach
                                                                                     }
                                                                                 </script>
-                                                                            @endif
+                                                                        @endforeach
 {{--                                                                            @endisset--}}
-                                                                        @endforeach
-                                                                        @endforeach
-                                                                        @endforeach
                                                                         <script>
                                                                             function f_{{$field['name']}}(e) {
                                                                                 //{{$select['field']}}1

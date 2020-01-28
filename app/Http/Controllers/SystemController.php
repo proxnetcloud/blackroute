@@ -295,12 +295,44 @@ class SystemController extends Controller
             $aux4 = [];
             $aux4['name'] = $tab['name'];
             $aux4['label'] = $tab['label'];
-            $aux = [];
+            $_tab = $aux4;
+//            $aux = [];
 
-            $ModelsFields = $tab['fields'];
-            foreach ($ModelsFields as $ModelFields) {
+//            $ModelsFields = $tab['models'];
+//            $ModelsFields = $tab['fields'];
+//            foreach ($ModelsFields as $ModelFields) {
+//            foreach ($tab['fields'] as $Model) {
+            $aux5 = [];
+            $_models = $aux5;
+            foreach ($tab['models'] as $Model) {
+                $ModelFields = $Model;
                 $ModelFieldsID = $ModelFields;
 
+//                $aux5 = [];
+//                $aux = [];
+//                $_model = $aux;
+                $_model = [];
+                $_fields = [];
+                if ( isset($ModelFields['action']['id']))
+                {
+                    $id = $ModelFields['action']['id'];
+                }
+                else
+                {
+                    $id = '';
+                }
+                if ( isset($ModelFields['action']) ) {
+//                    $aux5['action'] = $ModelFields['action'];
+//                    $_aux = $_model;
+//                    $aux['action'] = $ModelFields['action'];
+                    $_model['action'] = $ModelFields['action'];
+                }
+                else{
+//                    $aux5['action'] = [];
+//                    $_aux = $_model;
+//                    $aux['action'] = [];
+                    $_model['action'] = [];
+                }
 //                $error = new Error();
 //                $error->value = json_encode($ModelFields);
 //                $error->save();
@@ -406,37 +438,64 @@ class SystemController extends Controller
 
                     //error = Cannot use object of type stdClass as array
 //                $aux[] = (Object)[
-                    $aux[] = [
+                    //chave tab redundante e não usada
+//                    $aux = $_model;
+//                    $aux[] = [
+//                    $_model[] = [
+                    $_fields[] = [
                         'tab' => [
-                            'name'=>$aux4['name'],
-                            'label'=>$aux4['label'],
+                            'name'=>$_tab['name'],
+//                            'name'=>$aux4['name'],
+//                            'label'=>$aux4['label'],
+                            'label'=>$_tab['label'],
                         ],
                         'type' => $field->type,
-                        'name' => $field->name,
+                        'name' => $field->name.'__'.$id,
                         'label' => $field->label,
                         'placeholder' => $field->placeholder,
                         'options' => $options,
                     ];
                 }
+//                $aux5[] = $aux;
+                $_model['fields'] = $_fields;
+                $_models[] = $_model;
+//                $_models = $aux5;
+//                $aux = $_model;
             }
 //            $aux4['fields'] = $aux;
-            $tabs[] = $aux4;
+            //tentar declarar $aux4['fields'] como um array e fazer a linha abaixo ser $aux4['fields'][] = $aux5
+//            $aux4['fields'] = $aux5;
+            $_tab['models'] = $_models;
+//            $tabs[] = $aux4;
+            $tabs[] = $_tab;
         }
 //        $tabs
-        $fields = $aux;
+//        $fields = $aux;
 //        return ['error','object'=>$object];
-        echo '<pre>';
-        var_dump($fields);
-        echo '<pre>';
-        return;
+//        echo '<pre>';
+//        var_dump($fields);
+//        echo '<pre>';
+//        return;
+//        if ( !isset($actions))
+        if ( !isset($params['actions']))
+        {
+//            $actions = [];
+            $params['actions'] = [];
+        }
+//        echo '<pre>';
+//        echo json_encode($tabs);
+//        echo '<pre>';
+//        return;
         return view($form,
             [
                 'route'=>$route,
-                'fields'=> $fields,
+//                'fields'=> $fields,
                 'tabs'=> $tabs,
                 'values' => $values,
                 'activePage' => $params['activePage'],
                 'activeButton' => $params['activeButton'],
+//                'actions' => $actions,
+                'actions' => $params['actions'],
             ]);
     }
 }

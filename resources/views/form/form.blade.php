@@ -25,38 +25,42 @@
                             @if($route!='' or isset($params))
                                 {{--                            <form method="post" action="{{ route('profile.update') }}" autocomplete="off"--}}
                                 {{--                                  enctype="multipart/form-data">--}}
-                                <form method="post" action="{{ route($route,$params) }}" autocomplete="off"
-                                      enctype="multipart/form-data">
-                                    @else
-                                        <form method="post" action="{{ route($route) }}" autocomplete="off"
-                                              enctype="multipart/form-data">
-                                        @endif
+                            <form method="post" action="{{ route($route,$params) }}" autocomplete="off"
+                                  enctype="multipart/form-data">
+                            @else
+                            <form method="post" action="{{ route($route) }}" autocomplete="off"
+                              enctype="multipart/form-data">
+                            @endif
 
-                                            @csrf
-                                            {{--                                @method('patch')--}}
+                                @csrf
+            {{--                                @method('patch')--}}
 
-                                            {{--                                            <h6 class="heading-small text-muted mb-4">{{ __('User information') }}</h6>--}}
+{{--                                            <h6 class="heading-small text-muted mb-4">{{ __('User information') }}</h6>--}}
 
-                                            @php
-                                                $_fields = [];
-                                                if ( count($tabs) == 0 )
-                                                {
-                                                    $tabs[] = [
-                                                        'name' => 'null',
-                                                        'label' => 'null',
-                                                    ];
-                                                }
-                                            @endphp
-                                            @foreach($tabs as $tab)
-{{--                                            @forelse($tabs as $tab)--}}
-                                                @php
-                                                    $_fields[$tab['name']] =
-                                                        ['tab_label'=>$tab['label']
-                                                            ,'fields'=>''];
-                                                    //$tabs[$field['tab']['name']] =
-                                                    //    ['tab_label'=>$field['tab']['label']
-                                                    //        ,'fields'=>''];
-                                                @endphp
+{{--                                            @php--}}
+{{--                                                $_fields = [];--}}
+{{--                                                if ( count($tabs) == 0 )--}}
+{{--                                                {--}}
+{{--                                                    $tabs[] = [--}}
+{{--                                                        'name' => 'null',--}}
+{{--                                                        'label' => 'null',--}}
+{{--                                                    ];--}}
+{{--                                                }--}}
+{{--                                            @endphp--}}
+{{--                                            @foreach($tabs as $tab)--}}
+{{--                                            @php--}}
+{{--                                              foreach($tabs as $tab)--}}
+{{--                                                {--}}
+{{--//--}}{{--                                            @forelse($tabs as $tab)--}}
+{{--//                                                @php--}}
+{{--                                                    $_fields[$tab['name']] =--}}
+{{--                                                        ['tab_label'=>$tab['label']--}}
+{{--                                                            ,'fields'=>''];--}}
+{{--                                                    //$tabs[$field['tab']['name']] =--}}
+{{--                                                    //    ['tab_label'=>$field['tab']['label']--}}
+{{--                                                    //        ,'fields'=>''];--}}
+{{--                                                }--}}
+{{--                                            @endphp--}}
 {{--                                            @empty--}}
 {{--                                                @php--}}
 {{--                                                    $_fields[$tab['name']] =--}}
@@ -67,77 +71,89 @@
 {{--                                                    //        ,'fields'=>''];--}}
 {{--                                                @endphp--}}
 {{--                                            @endforelse--}}
-                                            @endforeach
-                                            @foreach($fields as $field)
-                                                @php
-                                                    if ( count($field['tab']) == 0  )
-                                                    {
-                                                        $field['tab']['name'] = 'null';
-                                                    }
-                                                @endphp
-                                                @if($field['type'] == 'select')
-                                                    @php
-                                                    $_fields[$field['tab']['name']]['fields'] .=
-                                                    '
-                                                    <div class="form-group'. $errors->has('name') ? ' has-danger' : '' .'">
-                                                        <label class="form-control-label" for="input-'.$field['name'].'">
-                                                        '.
-                                                            $field['label']
-                                                        .'
-                                                        </label>
-                                                        <select type="text" name="'.$field['name'].'" id="input-'.$field['name'].'" class="form-control'. $errors->has('name') ? ' is-invalid' : '' .'" placeholder="" value="" required autofocus>
-                                                    ';
-                                                    @endphp
-                                                    @foreach($field['options'] as $option)
-                                                        @php
-                                                            $_fields[$field['tab']['name']]['fields'] .=
-                                                            '
-                                                              <option value="'.$option['value'].'">'.$option['text'].'</option>
-                                                        ';
-                                                        @endphp
-                                                    @endforeach
-                                                    @php
-                                                        $_fields[$field['tab']['name']]['fields'] .=
-                                                            '
-                                                            </select>';
-                                                    @endphp
+{{--                                            @endforeach--}}
+{{--                                                @foreach($fields as $field)--}}
+{{--                                                @php--}}
+{{--                                                  foreach($fields as $field)--}}
+{{--                                                {--}}
+{{--//                                                @php--}}
+{{--                                                    if ( count($field['tab']) == 0  )--}}
+{{--                                                    {--}}
+{{--                                                        $field['tab']['name'] = 'null';--}}
+{{--                                                    }--}}
+{{--//                                                @endphp--}}
+{{--                                                @if($field['type'] == 'select')--}}
+{{--                                                    @php--}}
+{{--                                                    $_fields[$field['tab']['name']]['fields'] .=--}}
+{{--                                                    '--}}
+{{--                                                    <div class="form-group'. $errors->has('name') ? ' has-danger' : '' .'">--}}
+{{--                                                        <label class="form-control-label" for="input-'.$field['name'].'">--}}
+{{--                                                        '.--}}
+{{--                                                            $field['label']--}}
+{{--                                                        .'--}}
+{{--                                                        </label>--}}
+{{--                                                        <select type="text" name="'.$field['name'].'" id="input-'.$field['name'].'" class="form-control'. $errors->has('name') ? ' is-invalid' : '' .'" placeholder="" value="" required autofocus>--}}
+{{--                                                    ';--}}
+{{--                                                    @endphp--}}
+{{--                                                    @foreach($field['options'] as $option)--}}
+{{--                                                    @php--}}
+{{--                                                    foreach($field['options'] as $option)--}}
+{{--                                                    {--}}
+{{--//                                                        @php--}}
+{{--                                                            $_fields[$field['tab']['name']]['fields'] .=--}}
+{{--                                                            '--}}
+{{--                                                              <option value="'.$option['value'].'">'.$option['text'].'</option>--}}
+{{--                                                        ';--}}
+{{--                                                        @endphp--}}
+{{--                                                    @php--}}
+{{--                                                    }--}}
+{{--                                                    @endphp--}}
+{{--                                                    @endforeach--}}
+{{--                                                    @php--}}
+{{--                                                        $_fields[$field['tab']['name']]['fields'] .=--}}
+{{--                                                            '--}}
+{{--                                                            </select>';--}}
+{{--                                                    @endphp--}}
 
 {{--                                                        @include('alerts.feedback', ['field' => 'name'])--}}
-                                                    @php
-                                                        $_fields[$field['tab']['name']]['fields'] .=
-                                                            '
-                                                                    </div>';
-                                                    @endphp
-                                                @else
-                                                    @php
-                                                        if(!isset($field['value']) && count($values) > 0)
-                                                        {
-                                                            $field['value'] = $values[$field['name']];
-                                                        }
-                                                        else
-                                                        {
-                                                            $field['value'] = '';
-                                                        }
-                                                        $_fields[$field['tab']['name']]['fields'] .= '
-                                                <div class="form-group">
-                                                    <label class="form-control-label" for="input-'.$field['name'].'">
-                                                    '.
-                                                        $field['label']
-                                                        .'
-                                                    </label>
-                                                    <input type="'.$field['type'].'" name="'.$field['name'].'"
-                                                        id="input-'.$field['name'].'" class="form-control"
-                                                        placeholder="'.$field['placeholder'].'"
-                                                        value="'.$field['value'].'" required autofocus>
-                                                ';
-                                                    @endphp
-                                                        @php
-                                                        @endphp
+{{--                                                    @php--}}
+{{--                                                        $_fields[$field['tab']['name']]['fields'] .=--}}
+{{--                                                            '--}}
+{{--                                                                    </div>';--}}
+{{--                                                    @endphp--}}
+{{--                                                @else--}}
+{{--                                                    @php--}}
+{{--                                                        if(!isset($field['value']) && count($values) > 0)--}}
+{{--                                                        {--}}
+{{--                                                            $field['value'] = $values[$field['name']];--}}
+{{--                                                        }--}}
+{{--                                                        else--}}
+{{--                                                        {--}}
+{{--                                                            $field['value'] = '';--}}
+{{--                                                        }--}}
+{{--                                                        $_fields[$field['tab']['name']]['fields'] .= '--}}
+{{--                                                <div class="form-group">--}}
+{{--                                                    <label class="form-control-label" for="input-'.$field['name'].'">--}}
+{{--                                                    '.--}}
+{{--                                                        $field['label']--}}
+{{--                                                        .'--}}
+{{--                                                    </label>--}}
+{{--                                                    <input type="'.$field['type'].'" name="'.$field['name'].'"--}}
+{{--                                                        id="input-'.$field['name'].'" class="form-control"--}}
+{{--                                                        placeholder="'.$field['placeholder'].'"--}}
+{{--                                                        value="'.$field['value'].'" required autofocus>--}}
+{{--                                                ';--}}
+{{--                                                    @endphp--}}
+{{--                                                        @php--}}
+{{--                                                        @endphp--}}
 
 {{--                                                        @include('alerts.feedback', ['field' => 'name'])--}}
-                                                    </div>
-                                                @endif
-                                            @endforeach
+{{--                                                    </div>--}}
+{{--                                                @endif--}}
+{{--                                            @endforeach--}}
+{{--                                            @php--}}
+{{--                                            }--}}
+{{--                                            @endphp--}}
 
 
                                             <ul class="nav nav-tabs navform" id="myTab" role="tablist">
@@ -155,95 +171,199 @@
 {{--                                                @foreach($fields as $tab_name => $field)--}}
                                                 @foreach($tabs as $tab)
 {{--                                                @php--}}
-{{--                                                    $tab = [];--}}
-{{--                                                    $tab['name'] = $tab_name;--}}
-{{--                                                    $tab['label'] = $field['tab_label'];--}}
+{{--                                                foreach($tabs as $tab)--}}
+{{--                                                {--}}
+//{{--                                                @php--}}
+//{{--                                                    $tab = [];--}}
+//{{--                                                    $tab['name'] = $tab_name;--}}
+//{{--                                                    $tab['label'] = $field['tab_label'];--}}
+//{{--                                                @endphp--}}
 {{--                                                @endphp--}}
-                                                    @if($tab['name']!='null')
+{{--                                                    @if($tab['name']!='null')--}}
+                                                    @if(count($tabs) != 1)
                                                     <li class="nav-item">
                                                         <a class="nav-link @if($i) active @endif" id="{{$tab['name']}}-tab" data-toggle="tab" href="#{{$tab['name']}}" role="tab"
-                                                           aria-controls="{{$tab}}"
+                                                           aria-controls="{{$tab['name']}}"
                                                            aria-selected="@if($i) true @else false @endif">{{$tab['label']}}</a>
                                                     </li>
                                                     @endif
-                                                @php
-                                                  $i = 0;
-                                                @endphp
+                                                    @php
+                                                      $i = 0;
+                                                    @endphp
                                                 @endforeach
+{{--                                                @php--}}
+{{--                                                }--}}
+{{--                                                @endphp--}}
                                             </ul>
 
 
                                             @include('alerts.success')
                                             @include('alerts.error_self_update', ['key' => 'not_allow_profile'])
-                                            @if($fields[0]['tab']['name']!='null')
+{{--                                            @if($fields[0]['tab']['name']!='null')--}}
+                                            @if(count($tabs)!=1)
                                             <div class="tab-content" id="myTabContent">
                                             @endif
                                                 @php
                                                     $i = 1;
                                                 @endphp
-                                                $tabs[$tab['name']] =
-                                                ['tab_label'=>$tab['label']
-                                                ,'fields'=>''];
-{{--                                                @foreach($tabs as $tab)--}}
-                                                @foreach($_fields as $tab_name => $field)
-                                                @php
-                                                    //$fields = $tab['fields'];
-                                                    $tab = [];
-                                                    $tab['name'] = $tab_name;
-                                                @endphp
-                                                @if($fields[0]['tab']['name']!='null')
-                                                <div class="tab-pane fade" id="{{$tab['name']}}" role="tabpanel" aria-labelledby="{{$tab['name']}}-tab">
-{{--                                                    @if($i)--}}
+{{--                                                $tabs[$tab['name']] =--}}
+{{--                                                ['tab_label'=>$tab['label']--}}
+{{--                                                ,'fields'=>''];--}}
+                                                @foreach($tabs as $tab)
+{{--                                                @foreach($_fields as $tab_name => $field)--}}
+{{--                                                @php--}}
+{{--                                                foreach($_fields as $tab_name => $field)--}}
+{{--                                                {--}}
+{{--                                                @endphp--}}
+{{--                                                @php--}}
+{{--                                                    //$fields = $tab['fields'];--}}
+{{--                                                    $tab = [];--}}
+{{--                                                    $tab['name'] = $tab_name;--}}
+{{--                                                @endphp--}}
+{{--                                                @if($fields[0]['tab']['name']!='null')--}}
+                                                @if(count($tabs)!=1)
+{{--                                                <div class="tab-pane fade" id="{{$tab['name']}}" role="tabpanel" aria-labelledby="{{$tab['name']}}-tab">--}}
+                                                <div class="tab-pane @if($i) active @endif" id="{{$tab['name']}}" role="tabpanel" aria-labelledby="{{$tab['name']}}-tab">
+                                                    @if($i)
                                                     <script>
                                                         // $('#personal').show();
-                                                        document.getElementById({{$tab['name']}}).style.display = "inline";
+                                                        //document.getElementById('{{$tab['name']}}').style.display = "inline";
+                                                        //document.getElementById('{{$tab['name']}}').style.display = "block";
                                                     </script>
+                                                    @endif
                                                 @endif
-{{--                                                    @endif--}}
                                                     @php
-                                                        //$i = 0;
+                                                        $i = 0;
                                                     @endphp
                                                     <div class="pl-lg-4">
-                                                        {{$field['fields']}}
+{{--                                                        {{$field['fields']}}--}}
+{{--                                                        @php--}}
+{{--                                                            $fields = $tab['fields'];--}}
+{{--                                                        @endphp--}}
+{{--                                                        @foreach($tab['models'] as $models)--}}
+                                                        @foreach($tab['models'] as $model)
 {{--                                                        @foreach($fields as $field)--}}
-{{--                                                            @if($field['type'] == 'select')--}}
-{{--                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
-{{--                                                                    <label class="form-control-label" for="input-name">--}}
-{{--                                                                        --}}{{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
-{{--                                                                        {{$field['label']}}--}}
-{{--                                                                    </label>--}}
-{{--                                                                    --}}{{--                                        <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
-{{--                                                                    <select type="text" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
-{{--                                                                        @foreach($field['options'] as $option)--}}
-{{--                                                                            <option value="{{$option['value']}}">{{$option['text']}}</option>--}}
-{{--                                                                        @endforeach--}}
-{{--                                                                    </select>--}}
+{{--                                                        <div id="@isset($model['action']['id']) {{$model['action']['id']}} @endisset"--}}
+{{--                                                             style="display: @isset($model['action']['display']){{$model['action']['display']}}@endisset"--}}
+{{--                                                            >--}}
+{{--                                                        @foreach($models as $model)--}}
+                                                        <div id="@isset($model['action']['id']){{$model['action']['id']}}@endisset"
+                                                             style="display: @isset($model['action']['display']){{$model['action']['display']}}@endisset"
+                                                        >
+                                                        @foreach($model['fields'] as $field)
+                                                            @if($field['type'] == 'select')
+                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+                                                                    <label class="form-control-label" for="input-name">
+{{--                                                                                                                    <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
+                                                                        {{$field['label']}}
+                                                                    </label>
+{{--                                                                    <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+                                                                    @php
+                                                                        $select = [];
 
-{{--                                                                    @include('alerts.feedback', ['field' => 'name'])--}}
-{{--                                                                </div>--}}
-{{--                                                            @else--}}
-{{--                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
-{{--                                                                    <label class="form-control-label" for="input-{{$field['name']}}">--}}
-{{--                                                                        --}}{{--                                            <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
-{{--                                                                        {{$field['label']}}--}}
-{{--                                                                    </label>--}}
-{{--                                                                    --}}{{--                                        <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
-{{--                                                                    @php--}}
-{{--                                                                        if(!isset($field['value']) && count($values) > 0)--}}
-{{--                                                                        {--}}
-{{--                                                                            $aux3 = $field['name'];--}}
-{{--                                                                            $field['value'] = $values[$aux3];--}}
-{{--                                                                        }--}}
-{{--                                                                        else--}}
-{{--                                                                        {--}}
-{{--                                                                            $field['value'] = '';--}}
-{{--                                                                        }--}}
-{{--                                                                    @endphp--}}
-{{--                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>--}}
+                                                                        $mystring = $field['name'];
+                                                                        $findme = '__';
+                                                                        $pos = strpos($mystring, $findme);
+                                                                        $select['field'] = substr($mystring, 0,$pos);
+                                                                    @endphp
+                                                                    <select type="text" onchange="f_{{$field['name']}}(this)" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
+                                                                        @foreach($field['options'] as $option)
+                                                                            <option value="{{$option['value']}}">{{$option['text']}}</option>
+{{--                                                                        @foreach($actions as $action)--}}
+{{--                                                                            @isset($model['action']['option'])--}}
+{{--                                                                            @if($model['action']['select']==$field['name'])--}}
+{{--                                                                            @if($model['action']['option']==$option['value'])--}}
+{{--                                                                            @if($action['select']==$field['name'])--}}
+{{--                                                                        @foreach($actions as $action)--}}
+                                                                        @foreach($actions as $_action)
+                                                                            @foreach($_action as $action)
+                                                                            @if($action['select']==$select['field'])
+                                                                                <script>
+                                                                                    function hide_for_{{$field['name']}}_{{$option['value']}}() {
+{{--                                                                                        @foreach($actions as $action)--}}
+                                                                                        @foreach($actions as $_action)
+                                                                                        @foreach($_action as $action)
+{{--                                                                                        @if($action['select']==$field['name'])--}}
+                                                                                        @if($action['select']==$select['field'])
+{{--                                                                                        @if($action['option']!=$option['value'])--}}
+                                                                                        document.getElementById('{{$action['id']}}').style.display = "none";
+{{--                                                                                        @endif--}}
+                                                                                        @endif
+                                                                                        @endforeach
+                                                                                        @endforeach
+                                                                                    }
+                                                                                    function show_for_{{$field['name']}}_{{$option['value']}}() {
+                                                                                        {{--document.getElementById('{{$action['id']}}').style.display = "show";--}}
+                                                                                        @if($action['option']==$option['value'])
+                                                                                        document.getElementById('{{$action['id']}}').style.display = "block";
+                                                                                        @endif
+                                                                                    }
+                                                                                </script>
+                                                                            @endif
+{{--                                                                            @endisset--}}
+                                                                        @endforeach
+                                                                        @endforeach
+                                                                        @endforeach
+                                                                        <script>
+                                                                            function f_{{$field['name']}}(e) {
+                                                                                //{{$select['field']}}1
+{{--                                                                                @foreach($actions as $action)--}}
 
-{{--                                                                    @include('alerts.feedback', ['field' => 'name'])--}}
-{{--                                                                </div>--}}
-{{--                                                            @endif--}}
+{{--                                                                                @foreach($actions as $_action)--}}
+{{--                                                                                @foreach($_action as $action)--}}
+
+{{--                                                                                @if($action['select']==$field['name'])--}}
+                                                                                //{{$select['field']}}2
+
+{{--                                                                                @if($action['select']==$select['field'])--}}
+
+                                                                                @foreach($field['options'] as $option)
+                                                                                {{--if(e.value=='{{$action['option']}}')--}}
+                                                                                if(e.value=='{{$option['value']}}')
+                                                                                {
+                                                                                    {{--hide_for_{{$field['name']}}_{{$action['option']}}();--}}
+                                                                                    {{--show_for_{{$field['name']}}_{{$action['option']}}();--}}
+                                                                                    hide_for_{{$field['name']}}_{{$option['value']}}();
+                                                                                    show_for_{{$field['name']}}_{{$option['value']}}();
+                                                                                }
+                                                                                @endforeach
+
+{{--                                                                                @endif--}}
+{{--                                                                                @endforeach--}}
+{{--                                                                                @endforeach--}}
+
+                                                                            }
+                                                                        </script>
+                                                                    </select>
+{{----}}
+                                                                    @include('alerts.feedback', ['field' => 'name'])
+                                                                </div>
+                                                            @else
+                                                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+                                                                    <label class="form-control-label" for="input-{{$field['name']}}">
+{{--                                                                                                                    <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
+                                                                        {{$field['label']}}
+                                                                    </label>
+{{--                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+                                                                    @php
+                                                                        if(!isset($field['value']) && count($values) > 0)
+                                                                        {
+                                                                            $aux3 = $field['name'];
+                                                                            $field['value'] = $values[$aux3];
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            $field['value'] = '';
+                                                                        }
+                                                                    @endphp
+                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>
+{{----}}
+                                                                    @include('alerts.feedback', ['field' => 'name'])
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                        </div>
+                                                        @endforeach
 {{--                                                        @endforeach--}}
 
 {{--                                                        <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">--}}
@@ -264,15 +384,20 @@
 {{--                                                            <button type="submit" class="btn btn-default mt-4">{{ __('Save') }}</button>--}}
 {{--                                                        </div>--}}
                                                     </div>
-                                                @if($fields[0]['tab']['name']!='null')
+{{--                                                @if($fields[0]['tab']['name']!='null')--}}
+                                                @if(count($tabs)!=1)
                                                 </div>
                                                 @endif
                                                 @endforeach
+{{--                                                @php--}}
+{{--                                                }--}}
+{{--                                                @endphp--}}
                                                 <div class="text-center">
                                                     <button type="submit" class="btn btn-default mt-4">Salvar</button>
 {{--                                                    <button type="submit" class="btn btn-default mt-4">{{ __('Save') }}</button>--}}
                                                 </div>
-                                            @if($fields[0]['tab']['name']!='null')
+{{--                                            @if($fields[0]['tab']['name']!='null')--}}
+                                            @if(count($tabs)!=1)
                                             </div>
                                             @endif
                                         </form>

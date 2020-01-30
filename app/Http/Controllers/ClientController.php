@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Client;
+use App\Document;
 use App\People;
 use App\Address;
 use App\Subscription;
 use App\Phone;
+use App\FTTH;
+use App\CTO;
+use App\CTOPort;
+use App\ONU;
+use App\Plan;
+use App\Wireless;
+use App\MetroUTP;
 
 class ClientController extends Controller
 {
@@ -50,25 +58,48 @@ class ClientController extends Controller
 //        ];
 //        $fields[] = $field;
 
+        //o id é o id de um model com seus fields a serem exibidos e usado para criar uma div com eles
+        //display é o modo padrão de início
+        //select é o select que executará a ação e option é a opção que mostrará o conteudo do id
         $actions = [
-            [
-//                [
-//                    'id' => 'people',
-//                    'display' => 'show',
-//                    'select' => 'person',
-//                    'option' => 'fisica',
-//                ],
+            [//se é apenas para mostrar e ocultar um único conjunto de classe , deixar preenchido com somente um action
                 [
-                    'id' => 'representative',//id do model desse campo
-                    'display' => 'none',
+//                    'id' => 'representative',//id do model desse campo
+                    'id' => 'representative',//class que é para ser mostrada quando selecionada a opção referida
+                                                //...as outras class dessa action são ocultadas
                     'select' => 'person',
                     'option' => 'juridica',
                 ],
                 [
                     'id' => 'rg',//id do model desse campo
-                    'display' => 'block',
                     'select' => 'person',
                     'option' => 'fisica',
+                ],
+            ],
+            [//se é apenas para mostrar e ocultar um único conjunto de classe , deixar preenchido com somente um action
+                [
+                    'id' => 'ftth',//class que é para ser mostrada quando selecionada a opção referida
+                                    //...as outras class dessa action são ocultadas
+                    'select' => 'technology',
+                    'option' => 'ftth',
+                ],
+                [
+                    'id' => 'w24',//class que é para ser mostrada quando selecionada a opção referida
+                                    //...as outras class dessa action são ocultadas
+                    'select' => 'technology',
+                    'option' => 'w24',
+                ],
+                [
+                    'id' => 'w58',//class que é para ser mostrada quando selecionada a opção referida
+                                    //...as outras class dessa action são ocultadas
+                    'select' => 'technology',
+                    'option' => 'w58',
+                ],
+                [
+                    'id' => 'metro_utp',//class que é para ser mostrada quando selecionada a opção referida
+                                    //...as outras class dessa action são ocultadas
+                    'select' => 'technology',
+                    'option' => 'metro_utp',
                 ],
             ],
         ];
@@ -185,6 +216,13 @@ class ClientController extends Controller
         {
             $aux = $id.'_id';
             $as->$aux = $$id->id;
+        }
+
+        $id = 'plan';
+        foreach ($ask as $as)
+        {
+            $aux = $id.'_id';
+            $as->$aux = $ask[$id]->$aux;
         }
 
 //        $Models = ['People','Phone','Address','Client','Subscription'];
@@ -407,14 +445,14 @@ class ClientController extends Controller
         $tabs = [
             [
                 'name' => 'data',
-                'label' => 'Dados',
+                'label' => 'Dados Pessoais',
                 'models' =>
                     [
                         [
                             'Model' => People::class,
-                            'fields' => ['name','cpf','person'],
+                            'fields' => ['name'],
                             'action' => [
-//                                'id' => 'people',
+                                'id' => 'people1',
 //                                'display' => 'show',
 //                                'select' => 'person',
 //                                'option' => 'fisica',
@@ -424,9 +462,50 @@ class ClientController extends Controller
                         ],
                         [
                             'Model' => People::class,
+                            'fields' => ['cpf'],
+                            'label' => ' / CNPJ',//label a adicionar ao label de cada campo
+                            'action' => [
+                                'id' => 'people2',
+//                                'display' => 'show',
+//                                'select' => 'person',
+//                                'option' => 'fisica',
+                            ],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                        ],
+                        [
+                            'Model' => People::class,
+                            'fields' => ['person'],
+                            'action' => [
+                                'id' => 'people3',
+//                                'display' => 'show',
+//                                'select' => 'person',
+//                                'option' => 'fisica',
+                            ],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                        ],
+                        [
+                            'Model' => People::class,
+                            'fields' => ['juridica_type'],
+                            'label' => '',
+                            'action' => [
+                                'id' => 'people4',
+                                'class' => 'representative',
+                                'display' => 'none',
+    //                                'select' => 'person',
+    //                                'option' => 'juridica',
+                            ],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                        ],
+                        [
+                            'Model' => People::class,
                             'fields' => ['name','cpf'],
+                            'label' => ' - Representante Legal',
                             'action' => [
                                 'id' => 'representative',
+                                'class' => 'representative',
                                 'display' => 'none',
 //                                'select' => 'person',
 //                                'option' => 'juridica',
@@ -438,7 +517,8 @@ class ClientController extends Controller
                             'Model' => People::class,
                             'fields' => ['rg'],
                             'action' => [
-                                'id' => 'rg',
+                                'id' => 'people6',
+                                'class' => 'rg',
 //                                'display' => 'none',
 //                                'select' => 'person',
 //                                'option' => 'juridica',
@@ -450,7 +530,7 @@ class ClientController extends Controller
                             'Model' => People::class,
                             'fields' => ['birth','email','civil_state'],
                             'action' => [
-                                'id' => '',
+                                'id' => 'people7',
 //                                'display' => 'none',
 //                                'select' => 'person',
 //                                'option' => 'juridica',
@@ -461,8 +541,20 @@ class ClientController extends Controller
                         [
                             'Model' => Phone::class,
                             'fields' => [],
+                            'label' => ' 1',
                             'action' => [
-                                'id' => 'phone',
+                                'id' => 'phone1',
+//                                'display' => '',
+//                                'select' => '',
+//                                'option' => '',
+                            ],
+                        ],
+                        [
+                            'Model' => Phone::class,
+                            'fields' => [],
+                            'label' => ' 2',
+                            'action' => [
+                                'id' => 'phone2',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',
@@ -502,17 +594,162 @@ class ClientController extends Controller
                 'name' => 'circuit1',
                 'label' => 'Circuito Primário',
                 'models' =>
-                    [
+                    [//'plan_id','auth_type','status','ip_address','mac_address','login', 'password',
                         [
-                            'Model'=> Subscription::class,
-                            'fields' => ['login','password'],
+                            'Model'=> Plan::class,
+                            'fields' => ['plan_id'],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'subscription',
+                                'id' => 'plan',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> Subscription::class,
+                            'fields' => ['auth_type','status','ip_address','mac_address','login', 'password',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'subscription1',
+//                                'display' => '',
+//                                'select' => '',
+//                                'option' => '',
+                            ],
+                        ],
+                    ],
+            ],
+            [
+                'name' => 'circuit2',
+                'label' => 'Circuito Secundário',
+                'models' =>
+                    [
+                        [
+                            'Model'=> Subscription::class,
+                            'fields' => ['technology',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'subscription2',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> FTTH::class,
+                            'fields' => ['olt','pon_port',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'ftth1',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [//quando é para exibir uma lista de objetos de uma tabela , aqui por exemplo da tabela cto
+                            'Model'=> CTO::class,
+                            'fields' => ['cto_id',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'cto',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> CTOPort::class,
+                            'fields' => ['cto_port_id',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'cto_port',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> ONU::class,
+                            'fields' => ['model','serial','mac','ip',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'onu',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> FTTH::class,
+                            'fields' => ['vlan',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'ftth2',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> Wireless::class,
+                            'fields' => ['ssid','password','radio','ip','vlan',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'w24',
+                                'class' => 'w24',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> Wireless::class,
+                            'fields' => ['ssid','password','radio','ip','vlan',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'w58',
+                                'class' => 'w58',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> MetroUTP::class,
+                            'fields' => ['caixa_switch','fonte_poe','switch_port','vlan',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'metro_utp',
+                                'class' => 'metro_utp',
+                                'display' => '',
+                            ],
+                        ],
+                    ],
+            ],
+            [
+                'name' => 'financial',
+                'label' => 'Dados de Pagamento',
+                'models' =>
+                    [
+                        [
+                            'Model'=> Document::class,
+                            'fields' => ['document_id',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'contrato',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+                            'Model'=> Subscription::class,
+                            'fields' => ['items_comodato','financial_api','free','discount_pay',
+                                'extra_pay','pay_day','auto_block','days_to_block','comment',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'subscription3',
+                                'display' => '',
                             ],
                         ],
                     ],

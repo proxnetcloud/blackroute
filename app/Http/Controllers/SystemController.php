@@ -312,6 +312,9 @@ class SystemController extends Controller
 //                $aux = [];
 //                $_model = $aux;
                 $_model = [];
+                if ( isset($Model['label'])) {
+                    $_model['label'] = $Model['label'];
+                }
                 $_fields = [];
                 if ( isset($ModelFields['action']['id']))
                 {

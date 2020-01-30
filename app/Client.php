@@ -34,6 +34,14 @@ class Client extends Model
 
     ];
 
+    /**
+     * Get the records for this.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany('App\Subscription');
+    }
+
     // Para permitir a geração de aliases
     public static function _1580006184554()
     {
@@ -75,6 +83,6 @@ class Client extends Model
      */
     public function people()
     {
-        return $this->hasOne('App\People');
+        return $this->belongsTo('App\People');
     }
 }

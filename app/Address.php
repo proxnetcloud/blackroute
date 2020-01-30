@@ -13,8 +13,10 @@ class Address extends Model
      * @var array
      */
     protected $fillable = [
-        'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
-        'condominium','apartment','people_id',
+        'coordinates','zip','address', 'number','condominium','block','apartment','complement',
+        'neighborhood','city','state', 'country',
+        //'condominium','block','apartment','coordinates',
+        'people_id',
     ];
 
     /**
@@ -54,7 +56,7 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
 
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'number';
@@ -70,7 +72,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'zip';
         $$field = [
@@ -85,7 +88,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'neighborhood';
         $$field = [
@@ -100,7 +104,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'city';
         $$field = [
@@ -115,7 +120,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'complement';
         $$field = [
@@ -130,7 +136,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'state';
         $$field = [
@@ -145,7 +152,8 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'country';
         $$field = [
@@ -160,7 +168,87 @@ class Address extends Model
                 ],
             ],
         ];
-        $fields[] = $$field;
+        $fields[$field] = $$field;
+
+        //'condominium','block','apartment','coordinates',
+        $field = 'condominium';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Condomínio',
+            'placeholder' => 'Condomínio',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[$field] = $$field;
+
+        //'condominium','block','apartment','coordinates',
+        $field = 'block';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Bloco',
+            'placeholder' => 'Bloco',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[$field] = $$field;
+
+        //'condominium','block','apartment','coordinates',
+        $field = 'apartment';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Apartamento',
+            'placeholder' => 'Apartamento',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[$field] = $$field;
+
+        //'condominium','block','apartment','coordinates',
+        $field = 'coordinates';
+        $$field = [
+            'type' => 'text',
+            'name' => $field,
+            'label' => 'Coordenadas',
+            'placeholder' => 'Coordenadas',
+            'options' => [
+                [
+                    'value' => '',
+                    'text' => '',
+                ],
+            ],
+        ];
+        $fields[$field] = $$field;
+
+        //colocar em uma ordem especificada
+//        $names = ['address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',];
+        $names = ['coordinates','zip','address', 'number','condominium','block','apartment','complement',
+        'neighborhood','city','state', 'country',];
+        $aux = [];
+        foreach ($names as $name)
+        {
+            $aux[] = $fields[$name];
+        }
+        $fields = $aux;
+        //equivalente ao foreach
+//        $fields = [
+//            $fields['address'],
+//            $fields['number'],
+//        ];
 
         return [$fields];
     }

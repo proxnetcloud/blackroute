@@ -4,17 +4,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class _Model extends Model
+class Document extends Model
 {
     //
-    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-
+        'name','text','company_id',
     ];
 
     /**
@@ -35,19 +34,28 @@ class _Model extends Model
 
     ];
 
+    /**
+     * Get the object that owns this.
+     */
+    //fica no Model que tem o id
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
     // Para retornar os fillable
     //...pois não podem ser acessados externamente...
     //...pois são protected e para evitar possíveis...
     //...problemas futuros por ser padrão do Laravel...
     //...não altero .
     //Para permitir a geração de aliases
-    public static function _123()
+    public static function _1580344852932()
     {
-        return (new ThisModel123())->fillable;
+        return (new Document())->fillable;
     }
     public static function fields()
     {
-        return ThisModel123::_123();
+        return Document::_1580344852932();
     }
 
     // Para permitir a geração do FrontEnd de forma automatizada
@@ -58,16 +66,17 @@ class _Model extends Model
 
         // 'field1','field2','field3',
         //'model_id'
-        $field = '';
-//        $aux = substr($field, 0,-3).'s';
+        $field = 'document_id';
+        $aux = substr($field, 0,-3).'s';
         $options = [];
-//        foreach (\Auth::user()->company->$aux as $once) {
+        foreach (\Auth::user()->company->$aux as $once) {
 //            $text = '';
-//            $options[] = [
-//                'value' => $once->id,
+            $options[] = [
+                'value' => $once->id,
 //                'text' => $text,
-//            ];
-//        }
+                'text' => $once->name,
+            ];
+        }
 //        $options = [
 //            [
 //                'value' => '',
@@ -75,25 +84,20 @@ class _Model extends Model
 //            ],
 //        ];
         $$field = [
-            'type' => '',
+            'type' => 'select',
             'name' => $field,
-            'label' => '',
-            'placeholder' => '',
+            'label' => 'Contrato',
+            'placeholder' => 'Contrato',
             'options' => $options,
         ];
         $fields[$field] = $$field;
 
-        $aux = [];
         //colocar em uma ordem especificada
-//        $names = ['field1', 'field2', 'field3',];
-//        foreach ($names as $name)
-//        {
-//            $aux[] = $fields[$name];
-//        }
-        //colocar sem ordem
-        foreach ($fields as $field)
+        $names = ['document_id',];
+        $aux = [];
+        foreach ($names as $name)
         {
-            $aux[] = $field;
+            $aux[] = $fields[$name];
         }
         $fields = $aux;
 
@@ -104,7 +108,7 @@ class _Model extends Model
 //        $$field = [
 //            'label' => '',
 //            'type' => '',
-            //se o elemento html é finalizado com '>' ou com '</select>' por exemplo
+        //se o elemento html é finalizado com '>' ou com '</select>' por exemplo
 //            'has_key_end' => 1,
 //            'attr' => [
 //                'type' => 'text',
@@ -114,31 +118,5 @@ class _Model extends Model
 //            ],
 //            'options' => $options,
 //        ];
-    }
-
-    /**
-     * Get the record associated with this.
-     */
-    //fica no Model que NÃO tem o id
-    public function record()
-    {
-        return $this->hasOne('App\Record');
-    }
-
-    /**
-     * Get the records for this.
-     */
-    public function records()
-    {
-        return $this->hasMany('App\Record');
-    }
-
-    /**
-     * Get the object that owns this.
-     */
-    //fica no Model que tem o id
-    public function own()
-    {
-        return $this->belongsTo('App\Own');
     }
 }

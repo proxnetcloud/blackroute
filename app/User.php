@@ -164,6 +164,8 @@ class User extends Authenticatable
     /**
      * Get the company record associated with the user.
      */
+    //para verificar o admin da company fazer o abaixo
+    //Auth::user()->company->admin->id == Auth::user()->id
     public function company()
     {
         return $this->hasOne('App\Company');
@@ -173,10 +175,10 @@ class User extends Authenticatable
     /**
      * Get the company that owns the user.
      */
-    public function _company()
-    {
-        return $this->belongsTo('App\Company');
-    }
+//    public function _company()
+//    {
+//        return $this->belongsTo('App\Company');
+//    }
 
     public function field()
     {

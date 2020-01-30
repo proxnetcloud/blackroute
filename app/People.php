@@ -14,7 +14,8 @@ class People extends Model
      */
     //phone tem tabela especifica
     protected $fillable = [
-        'name', 'cpf', 'rg', 'birth', 'email','person','representative_cpf','civil_state',
+        'name', 'cpf', 'rg', 'birth', 'email','person','representative_id','civil_state',
+        'juridica_type',
     ];
 
     // Para retornar os fillable
@@ -198,6 +199,46 @@ class People extends Model
         ];
         $fields[] = $$field;
 
+        //juridica_type
+        $field = 'juridica_type';
+        $$field = [
+            'type' => 'select',
+            'name' => $field,
+            'label' => 'Tipo de Pessoa Jurídica',
+            'placeholder' => 'Tipo de Pessoa Jurídica',
+            'options' => [
+                [
+                    'value' => 'comercial-industrial',
+                    'text' => 'Comercial / Industrial',
+                ],
+                [
+                    'value' => 'poder-publico',
+                    'text' => 'Poder Público',
+                ],
+                [
+                    'value' => 'publico',
+                    'text' => 'Público',
+                ],
+                [
+                    'value' => 'semi-publico',
+                    'text' => 'Semi-Público',
+                ],
+                [
+                    'value' => 'provedor-scm',
+                    'text' => 'Provedor SCM',
+                ],
+                [
+                    'value' => 'residencial',
+                    'text' => 'Residencial',
+                ],
+                [
+                    'value' => 'outros',
+                    'text' => 'Outros',
+                ],
+            ],
+        ];
+        $fields[] = $$field;
+
         $fields = array_slice($fields, 1);
         return [$fields];
     }
@@ -207,7 +248,7 @@ class People extends Model
      */
     public function client()
     {
-        return $this->belongsTo('App\Client');
+        return $this->hasOne('App\Client');
     }
 
     /**
@@ -224,5 +265,21 @@ class People extends Model
     public function phones()
     {
         return $this->hasMany('App\Phone');
+    }
+
+    /**
+     * Get the record associated with this.
+     */
+//    public function company()
+//    {
+//        return $this->hasOne('App\People','representative_id');
+//    }
+
+    /**
+     * Get the object that owns this.
+     */
+    public function representative()
+    {
+        return $this->belongsTo('App\People','representative_id');
     }
 }

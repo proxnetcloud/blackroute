@@ -33,7 +33,7 @@ Route::get('/dash', 'HomeController@index')->name('dash');
 //    'user' => 'UserController'
 //]);
 
-$Models = ['Company','User','Client','Test'];
+$Models = ['Company','User','Client','Test','Dev'];
 foreach ($Models as $Model)
 {
     Route::get('/'.strtolower($Model),

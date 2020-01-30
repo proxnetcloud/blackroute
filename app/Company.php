@@ -25,11 +25,47 @@ class Company extends Model
         return (new Company())->_1579740202755();
     }
 
+    /**
+     * Get the records for this.
+     */
+    public function ctos()
+    {
+        return $this->hasMany('App\CTO');
+    }
+
+    /**
+     * Get the records for this.
+     */
+    public function documents()
+    {
+        return $this->hasMany('App\Document');
+    }
+
+    /**
+     * Get the record associated with this.
+     */
+    //fica no Model que NÃO tem o id
+    public function cto_ports()
+    {
+        return $this->hasMany('App\CTOPort');
+    }
+
+    /**
+     * Get the records for this.
+     */
+    public function plans()
+    {
+        return $this->hasMany('App\Plan');
+    }
+
     // pode dar erro pois existe varios users com o mesmo id de company
     /**
      * Get the user that owns the company .
      */
-    public function user()
+    //para verificar o admin da company fazer o abaixo
+    //Auth::user()->company->admin->id == Auth::user()->id
+//    public function user()
+    public function admin()
     {
         return $this->belongsTo('App\User');
     }
@@ -37,9 +73,9 @@ class Company extends Model
     /**
      * Get the users for the company
      */
-    public function _user()
+    public function users()
     {
-        return $this->hasMany('App\Company');
+        return $this->hasMany('App\User');
     }
 
     public function field()

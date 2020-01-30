@@ -247,7 +247,12 @@
 {{--                                                             style="display: @isset($model['action']['display']){{$model['action']['display']}}@endisset"--}}
 {{--                                                            >--}}
 {{--                                                        @foreach($models as $model)--}}
-                                                        <div id="@isset($model['action']['id']){{$model['action']['id']}}@endisset"
+{{--                                                        <div id="@isset($model['action']['id']){{$model['action']['id']}}@endisset"--}}
+                                                        <div class="@if(isset($model['action']['class']))
+                                                                        {{$model['action']['class']}}
+                                                                    @elseif(isset($model['action']['id']))
+                                                                        {{$model['action']['id']}}
+                                                                    @endif"
                                                              style="display: @isset($model['action']['display']){{$model['action']['display']}}@endisset"
                                                         >
                                                         @foreach($model['fields'] as $field)
@@ -256,6 +261,10 @@
                                                                     <label class="form-control-label" for="input-name">
 {{--                                                                                                                    <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
                                                                         {{$field['label']}}
+                                                                        @if(isset($model['label']) && !empty($model['label']))
+{{--                                                                            - --}}
+                                                                            {{$model['label']}}
+                                                                        @endif
                                                                     </label>
 {{--                                                                    <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
                                                                     @php
@@ -283,7 +292,13 @@
 {{--                                                                                        @if($action['select']==$field['name'])--}}
                                                                                         @if($action['select']==$select['field'])
 {{--                                                                                        @if($action['option']!=$option['value'])--}}
-                                                                                        document.getElementById('{{$action['id']}}').style.display = "none";
+                                                                                        //document.getElementById('{{$action['id']}}').style.display = "none";
+                                                                                        var es = document.getElementsByClassName('{{$action['id']}}');
+//foreach(es as e)
+                                                                                        for(let i=0;i<es.length;i++)
+                                                                                        {
+                                                                                            es[i].style.display = 'none';
+                                                                                        }
 {{--                                                                                        @endif--}}
                                                                                         @endif
                                                                                         @endforeach
@@ -295,7 +310,13 @@
                                                                                         @foreach($_action as $action)
                                                                                         @if($action['select']==$select['field'])
                                                                                         @if($action['option']==$option['value'])
-                                                                                        document.getElementById('{{$action['id']}}').style.display = "block";
+                                                                                        var es = document.getElementsByClassName('{{$action['id']}}');
+//foreach(es as e)
+                                                                                        for(let i=0;i<es.length;i++)
+                                                                                        {
+                                                                                            es[i].style.display = 'block';
+                                                                                        }
+                                                                                        //document.getElementById('{{$action['id']}}').style.display = "block";
                                                                                         @endif
                                                                                         @endif
                                                                                         @endforeach
@@ -343,6 +364,10 @@
                                                                     <label class="form-control-label" for="input-{{$field['name']}}">
 {{--                                                                                                                    <i class="w3-xxlarge fa fa-user"></i>{{ __('Name') }}--}}
                                                                         {{$field['label']}}
+                                                                        @if(isset($model['label']) && !empty($model['label']))
+{{--                                                                            - --}}
+                                                                            {{$model['label']}}
+                                                                        @endif
                                                                     </label>
 {{--                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
                                                                     @php

@@ -9,6 +9,7 @@ use App\Phone;
 use App\Address;
 use App\Client;
 use App\Subscription;
+use App\_Model;
 
 class TestController extends Controller
 {
@@ -22,7 +23,9 @@ class TestController extends Controller
         //
         //return 'ok';
         //teste de colocar abas no formulario
-        $this->_1580011732603();
+//        $this->_1580011732603();
+
+        return _Model::find(2)->name;
     }
 
     //teste de colocar abas no formulario

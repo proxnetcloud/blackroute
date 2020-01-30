@@ -355,7 +355,13 @@ class SystemController extends Controller
 //                $error->save();
 
 //                $fields = (Object)$ModelFields['Model']::form()[0];
-                $fields = $ModelFields['Model']::form()[0];
+//                if ( $ModelFields['Model'] == 'Metro_UTP' or $ModelFields['Model'] == 'CTO_Port' )
+//                {
+                    $fields = ('App\\'.$ModelFields['Model'])::form()[0];
+//                }
+//                else {
+//                    $fields = $ModelFields['Model']::form()[0];
+//                }
                 $aux2 = '';
                 if (isset($ModelFieldsID['id'])) {
                     $aux2 = $ModelFields['Model']::where('id', $ModelFieldsID['id'])->first();

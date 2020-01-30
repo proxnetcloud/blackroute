@@ -16,6 +16,11 @@ class DevController extends Controller
     public function index()
     {
         //
+        $Model = 'App\Subscription';
+//        $return = ($Model::class)::form();
+        $return = $Model::form();
+        var_dump($return);
+        return 'ok';
         //ver os id do form de algum controlador com o aviso se fields vazio ou não
         //O aviso de fields vazio foi usado para debugar o tratamento inicial do request recebido pelo
         //... método store client

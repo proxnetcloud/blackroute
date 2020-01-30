@@ -12,11 +12,13 @@ use App\Subscription;
 use App\Phone;
 use App\FTTH;
 use App\CTO;
-use App\CTOPort;
+use App\CTO_Port;
+//use App\CTOPort;
 use App\ONU;
 use App\Plan;
 use App\Wireless;
-use App\MetroUTP;
+use App\Metro_UTP;
+use MongoDB\Driver\Query;
 
 class ClientController extends Controller
 {
@@ -176,6 +178,10 @@ class ClientController extends Controller
         $request->company_id = $user->company_id;
         $company = $user->company;
 
+        //classes model dos objects a criar
+        $classes = [];
+        //ids das classes model adicionadas a $classes
+//        $ids = []
         $form = $this->form();
         $ask = [];
         //$ask[$id] = new Request();
@@ -190,7 +196,58 @@ class ClientController extends Controller
                 }
                 else
                 {
-                    $id = '';
+//                    $id = '';
+                    throw new \Exception(
+                        '$model[\'action\'][\'id\']'.' precisa existir e não pode ser vazio
+                         pois o id é usado para salvar 
+                            os dados .'.' Na tab '.$tab['label']
+                    //$query, $this->prepareBindings($bindings), $e
+                    );
+                }
+//                if ( strpos($model['Model']['action']['id'],strtolower($model['Model']) ) !== false )
+                if ( strpos($id,strtolower($model['Model']) ) !== false )
+                {
+                    if ( array_search($model['Model'], $classes) === false) {
+//                        $classes[] = $model['Model'];
+//                        $ids[] = $model['Model']['action']['id'];
+                        $classes[] = [
+                            'class'=>$model['Model'],
+//                            'id'=>$model['Model']['action']['id'],
+                            'id'=>$id,
+                        ];
+                    }
+                }
+                else
+                {
+                    $aux = [];
+//                    foreach ($ids as $id)
+                    foreach ($classes as $class)
+                    {
+                        $aux[] = [
+                            $class['id'],
+//                            $model['Model']['action']['id'],
+                            $id,
+                        ];
+                    }
+                    $arr = array_map(function ($params){
+                            if( strpos($params[1],strtolower($params[0])) ===false )
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                return 1;
+                            }
+                        }, $aux);
+                    if ( !is_array('1',$arr) ) {
+//                        $classes[] = $model['Model'];
+//                        $ids[] = $model['Model']['action']['id'];
+                        $classes[] = [
+                            'class' => $model['Model'],
+//                            'id' => $model['Model']['action']['id'],
+                            'id' => $id,
+                        ];
+                    }
                 }
                 $ask[$id] = new Request();
                 foreach ($model['fields'] as $field)
@@ -217,6 +274,38 @@ class ClientController extends Controller
             $aux = $id.'_id';
             $as->$aux = $$id->id;
         }
+        $prefix = 'App\Http\Controllers';
+        foreach ($classes as $class)
+        {
+            $Model = $class['class'];
+            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
+//            $return = (new $Controller())->_store($request);;
+            $return = (new $Controller())->_store(new Request);;
+////            $return = (new PeopleController())->_store($request);;
+            if ( $return[0] == 'error' )
+            {
+                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+            }
+            $company = $return['object'];
+            $request->company_id = $company->id;
+
+            $id = 'company';
+            foreach ($ask as $as)
+            {
+                $aux = $id.'_id';
+                $as->$aux = $$id->id;
+            }
+
+            $id = 'plan';
+            foreach ($ask as $as)
+            {
+                $aux = $id.'_id';
+                $as->$aux = $ask[$id]->$aux;
+            }
+        }
+
+
+
 
         $id = 'plan';
         foreach ($ask as $as)
@@ -225,26 +314,32 @@ class ClientController extends Controller
             $as->$aux = $ask[$id]->$aux;
         }
 
-//        $Models = ['People','Phone','Address','Client','Subscription'];
+        $Models = ['People','Phone','Address','Client','Subscription'];
 //        $vars = [];
 
-//        foreach ($Models as $Model)
-//        {
-//            $Controller = ucfirst(strtolower($Model)).'Controller';
+        foreach ($Models as $Model)
+        {
+            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
 //            $return = (new $Controller())->_store($request);;
+            $return = (new $Controller())->_store(new Request);;
 ////            $return = (new PeopleController())->_store($request);;
-//            if ( $return[0] == 'error' )
-//            {
-//                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-//            }
-//
-////            $company = $return['object'];
-////            $request->company_id = $company->id;
+            if ( $return[0] == 'error' )
+            {
+                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+            }
+            $company = $return['object'];
+            $request->company_id = $company->id;
 //            // Simular as duas linhas acima .
 //            $vars[strtolower($Model)] = $return['object'];
 //            $model = strtolower($Model);
 //            $request->$model = $vars[strtolower($Model)]->id;
-//        }
+            $id = 'address';
+            foreach ($ask as $as)
+            {
+                $aux = $id.'_id';
+                $as->$aux = $$id->id;
+            }
+        }
 
 //        $Models = ['People','Phone','Address','Client','Subscription'];
 //        $Controller = ucfirst(strtolower($Model)).'Controller';
@@ -442,6 +537,12 @@ class ClientController extends Controller
 
     public function form()
     {
+        //o primeiro id de um objeto a ser criado precisa ser sem o número 1
+        //people,people2,people3,...ao inves de people1,people2,people3
+        //quando tiver duas div model conjunto de dados para ser add ao mesmo objecto , o id deve ser...
+        //acrescido e não decrementado de caracteres de forma ao id do primeiro estar contido no id do segundo
+        //isso para facilitar o tratamento inicial no method store
+        //os id deve ser o nome do model em minusculo acrescido do numero quando necessario
         $tabs = [
             [
                 'name' => 'data',
@@ -449,10 +550,11 @@ class ClientController extends Controller
                 'models' =>
                     [
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['name'],
                             'action' => [
-                                'id' => 'people1',
+                                'id' => 'people',
 //                                'display' => 'show',
 //                                'select' => 'person',
 //                                'option' => 'fisica',
@@ -461,7 +563,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['cpf'],
                             'label' => ' / CNPJ',//label a adicionar ao label de cada campo
                             'action' => [
@@ -474,7 +577,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['person'],
                             'action' => [
                                 'id' => 'people3',
@@ -486,7 +590,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['juridica_type'],
                             'label' => '',
                             'action' => [
@@ -500,7 +605,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['name','cpf'],
                             'label' => ' - Representante Legal',
                             'action' => [
@@ -514,7 +620,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['rg'],
                             'action' => [
                                 'id' => 'people6',
@@ -527,7 +634,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => People::class,
+//                            'Model' => People::class,
+                            'Model' => 'People',
                             'fields' => ['birth','email','civil_state'],
                             'action' => [
                                 'id' => 'people7',
@@ -539,7 +647,8 @@ class ClientController extends Controller
                             //                'fields' => ['field1','field2'],
                         ],
                         [
-                            'Model' => Phone::class,
+//                            'Model' => Phone::class,
+                            'Model' => 'Phone',
                             'fields' => ['number'],
                             'label' => ' 1',
                             'action' => [
@@ -550,7 +659,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model' => Phone::class,
+//                            'Model' => Phone::class,
+                            'Model' => 'Phone',
                             'fields' => ['number'],
                             'label' => ' 2',
                             'action' => [
@@ -568,7 +678,8 @@ class ClientController extends Controller
                 'models' =>
                     [
                         [
-                            'Model' => Address::class,
+//                            'Model' => Address::class,
+                            'Model' => 'Address',
                             'fields' => [],
                             'action' => [
                                 'id' => 'address',
@@ -596,7 +707,8 @@ class ClientController extends Controller
                 'models' =>
                     [//'plan_id','auth_type','status','ip_address','mac_address','login', 'password',
                         [
-                            'Model'=> Plan::class,
+//                            'Model'=> Plan::class,
+                            'Model'=> 'Plan',
                             'fields' => ['plan_id'],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -608,12 +720,13 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> Subscription::class,
+//                            'Model'=> Subscription::class,
+                            'Model'=> 'Subcription',
                             'fields' => ['auth_type','status','ip_address','mac_address','login', 'password',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'subscription1',
+                                'id' => 'subscription',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',
@@ -627,7 +740,8 @@ class ClientController extends Controller
                 'models' =>
                     [
                         [
-                            'Model'=> Subscription::class,
+//                            'Model'=> Subscription::class,
+                            'Model'=> 'Subscription',
                             'fields' => ['technology',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -637,30 +751,22 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> FTTH::class,
+                            'Model'=> 'FTTH',
+//                            'Model'=> FTTH::class,
                             'fields' => ['olt','pon_port',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'ftth1',
+                                'id' => 'ftth',
                                 'class' => 'ftth',
                                 'display' => '',
                             ],
                         ],
                         [//quando é para exibir uma lista de objetos de uma tabela , aqui por exemplo da tabela cto
-                            'Model'=> CTO::class,
+//                            'Model'=> CTO::class,
+                            'Model'=> 'CTO',
                             'fields' => ['cto_id',],
-                            //                'fields' => false,
-                            //                'fields' => ['field1','field2'],
-                            'action' => [
-                                'id' => 'cto',
-                                'class' => 'ftth',
-                                'display' => '',
-                            ],
-                        ],
-                        [
-                            'Model'=> CTOPort::class,
-                            'fields' => ['cto_port_id',],
+                            'create' => false,
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
@@ -670,7 +776,20 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> ONU::class,
+//                            'Model'=> CTO_Port::class,
+                            'Model'=> 'CTO_Port',
+                            'fields' => ['cto_port_id',],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                            'action' => [
+                                'id' => 'cto_port2',
+                                'class' => 'ftth',
+                                'display' => '',
+                            ],
+                        ],
+                        [
+//                            'Model'=> ONU::class,
+                            'Model'=> 'ONU',
                             'fields' => ['model','serial','mac','ip',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -681,7 +800,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> FTTH::class,
+//                            'Model'=> FTTH::class,
+                            'Model'=> 'FTTH',
                             'fields' => ['vlan',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -692,7 +812,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> Wireless::class,
+//                            'Model'=> Wireless::class,
+                            'Model'=> 'Wireless',
                             'fields' => ['ssid','password','radio','ip','vlan',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -703,7 +824,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> Wireless::class,
+                            'Model'=> 'Wireless',
+//                            'Model'=> Wireless::class,
                             'fields' => ['ssid','password','radio','ip','vlan',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -714,7 +836,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> MetroUTP::class,
+//                            'Model'=> Metro_UTP::class,
+                            'Model'=> 'Metro_UTP',
                             'fields' => ['caixa_switch','fonte_poe','switch_port','vlan',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -732,7 +855,8 @@ class ClientController extends Controller
                 'models' =>
                     [
                         [
-                            'Model'=> Document::class,
+//                            'Model'=> Document::class,
+                            'Model'=> 'Document',
                             'fields' => ['document_id',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -742,7 +866,8 @@ class ClientController extends Controller
                             ],
                         ],
                         [
-                            'Model'=> Subscription::class,
+//                            'Model'=> Subscription::class,
+                            'Model'=> 'Subscription',
                             'fields' => ['items_comodato','financial_api','free','discount_pay',
                                 'extra_pay','pay_day','auto_block','days_to_block','comment',],
                             //                'fields' => false,

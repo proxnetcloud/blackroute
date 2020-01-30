@@ -52,6 +52,24 @@ class Subscription extends Model
      * Get the record associated with this.
      */
     //fica no Model que NÃO tem o id
+    public function metro_utp()
+    {
+        return $this->hasOne('App\Metro_UTP');
+    }
+
+    /**
+     * Get the record associated with this.
+     */
+    //fica no Model que NÃO tem o id
+    public function wireless()
+    {
+        return $this->hasOne('App\Wireless');
+    }
+
+    /**
+     * Get the record associated with this.
+     */
+    //fica no Model que NÃO tem o id
     public function ftth()
     {
         return $this->hasOne('App\FTTH');

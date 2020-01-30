@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CTOPort extends Model
+class CTO_Port extends Model
 {
     //
     protected $table = 'cto_port';

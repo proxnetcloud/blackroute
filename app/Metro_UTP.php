@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MetroUTP extends Model
+class Metro_UTP extends Model
 {
     //
     protected $table = 'metro_utp';
@@ -15,6 +15,7 @@ class MetroUTP extends Model
      */
     protected $fillable = [
         'caixa_switch','fonte_poe','switch_port','vlan',
+        'subscription_id',
     ];
 
     /**
@@ -34,6 +35,15 @@ class MetroUTP extends Model
     protected $casts = [
 
     ];
+
+    /**
+     * Get the object that owns this.
+     */
+    //fica no Model que tem o id
+    public function subscription()
+    {
+        return $this->belongsTo('App\Subscription');
+    }
 
     // Para retornar os fillable
     //...pois não podem ser acessados externamente...

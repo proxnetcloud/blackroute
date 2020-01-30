@@ -47,7 +47,7 @@ class Company extends Model
     //fica no Model que NÃO tem o id
     public function cto_ports()
     {
-        return $this->hasMany('App\CTOPort');
+        return $this->hasMany('App\CTO_Port');
     }
 
     /**

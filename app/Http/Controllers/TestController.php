@@ -25,7 +25,14 @@ class TestController extends Controller
         //teste de colocar abas no formulario
 //        $this->_1580011732603();
 
-        return _Model::find(2)->name;
+//        return _Model::find(2)->name;
+
+        //testar string como class
+        $Model = 'App\Subscription';
+//        $return = ($Model::class)::form();
+        $return = $Model::form();
+        var_dump($return);
+        return 'ok';
     }
 
     //teste de colocar abas no formulario

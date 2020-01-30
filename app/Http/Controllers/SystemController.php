@@ -319,10 +319,24 @@ class SystemController extends Controller
                 if ( isset($ModelFields['action']['id']))
                 {
                     $id = $ModelFields['action']['id'];
+                    if ( empty($id) )
+                    {
+                        throw new \Exception(
+                            '$ModelFields[\'action\'][\'id\']'.' não pode ser vazio pois o id é usado para salvar 
+                            os dados .'
+                            //$query, $this->prepareBindings($bindings), $e
+                        );
+                    }
                 }
                 else
                 {
-                    $id = '';
+//                    $id = '';
+                    throw new \Exception(
+                        '$ModelFields[\'action\'][\'id\']'.' precisa existir e não pode ser vazio
+                         pois o id é usado para salvar 
+                            os dados .'.' Na tab '.$tab['label']
+                    //$query, $this->prepareBindings($bindings), $e
+                    );
                 }
                 if ( isset($ModelFields['action']) ) {
 //                    $aux5['action'] = $ModelFields['action'];
@@ -340,23 +354,73 @@ class SystemController extends Controller
 //                $error->value = json_encode($ModelFields);
 //                $error->save();
 
-                $fields = (Object)$ModelFields['Model']::form()[0];
+//                $fields = (Object)$ModelFields['Model']::form()[0];
+                $fields = $ModelFields['Model']::form()[0];
                 $aux2 = '';
                 if (isset($ModelFieldsID['id'])) {
                     $aux2 = $ModelFields['Model']::where('id', $ModelFieldsID['id'])->first();
                 }
-                foreach ($fields as $field) {
-                    $field = (Object)$field;
+//                if ( $ModelFields['fields'] != []) {
+//                if ( !isset($fields[0])) {
+                if ( !isset($fields[0]) and $ModelFields['fields'] != []) {
+                    $fields3 = $ModelFields['fields'];
+                }
+                else
+                {
+//                    return 'ok';
+                    $fields3 = $fields;
+                }
+//                foreach ($fields as $field) {
+//                foreach ($ModelFields['fields'] as $field) {
+                foreach ($fields3 as $field) {
+//                    $field = (Object)$field;
 //                $data[$field->name] = $aux2->$($field->name);
 //                $data[$field->name] = $aux2->$$field->name;
-                    $name2 = $field->name;
+//                    if ( $ModelFields['fields'] != []) {
+//                    if ( !isset($fields[0]) ) {
+                    if ( !isset($fields[0]) and $ModelFields['fields'] != []) {
+//                        try{
+                            $field = $fields[$field];
+//                        }
+//                        catch (\Exception $e)
+//                        {
+//                            echo '<pre>';
+//                            var_dump($fields);
+//                            echo '<pre>';
+//                            return;
+//                        }
+                    }
+//                    else
+//                    {
+//                        $field = $field;
+//                    }
+
+                    //PEGAR OS VALUE DO OBJECT ID
+//                    try {
+//                        $name2 = $fields[$field]['name'];
+                        $name2 = $field['name'];
+//                    }catch (\Exception $e){
+//                        echo $id;
+//                        echo '<br>';
+//                        echo $field;
+//                        echo '<br>';
+//                        echo '<pre>';
+//                        var_dump($fields[$field]);
+//                        var_dump($fields);
+//                        echo '<pre>';
+//                        return;
+//                    }
+//                    $name2 = $field->name;
                     if (isset($aux2->$name2)) {
-                        $data[$field->name] = $aux2->$name2;
+//                        $data[$field->name] = $aux2->$name2;
+                        $data[$field['name']] = $aux2->$name2;
+//                        $data[$fields[$field]['name']] = $aux2->$name2;
                     }
 
                     $aux2 = [];
                     foreach ($ModelFields['fields'] as $field2) {
-                        $aux2[] = [$field->name, $field2];
+//                        $aux2[] = [$field->name, $field2];
+                        $aux2[] = [$field['name'], $field2];
                     }
                     //$ModelFields['fields'] = $aux2;
 
@@ -379,7 +443,7 @@ class SystemController extends Controller
 ////                            $ModelFields['fields'])) != false )
 //                            $aux2)) != false )
 //                {
-////                    continue;
+//                    continue;
 //                }
 
                     $arr = array_map(function ($params) {
@@ -430,8 +494,11 @@ class SystemController extends Controller
 //                    continue;
 //                }
                     $options = [];
-                    if ($field->type == 'select' or $field->type == 'radio') {
-                        foreach ($field->options as $option) {
+//                    if ($field->type == 'select' or $field->type == 'radio') {
+//                    if ($fields[$field]['type'] == 'select' or $fields[$field]['type'] == 'radio') {
+                    if ($field['type'] == 'select' or $field['type'] == 'radio') {
+//                        foreach ($fields[$field]['options'] as $option) {
+                        foreach ($field['options'] as $option) {
                             $options[] = [
                                 'value' => $option['value'],
                                 'text' => $option['text'],
@@ -452,10 +519,19 @@ class SystemController extends Controller
 //                            'label'=>$aux4['label'],
                             'label'=>$_tab['label'],
                         ],
-                        'type' => $field->type,
-                        'name' => $field->name.'__'.$id,
-                        'label' => $field->label,
-                        'placeholder' => $field->placeholder,
+                        'type' => $field['type'],
+//                        'type' => $fields[$field]['type'],
+//                        'type' => $field->type,
+//                        'name' => $field->name.'__'.$id,
+                        'name' => $field['name'].'__'.$id,
+//                        'name' => $fields[$field]['name'].'__'.$id,
+//                        'label' => $field->label,
+                        'label' => $field['label'],
+//                        'label' => $fields[$field]['label'],
+//                        'placeholder' => $field->placeholder,
+                        'placeholder' => $field['placeholder'],
+//                        'placeholder' => $fields[$field]['placeholder'],
+//                        'options' => $options,
                         'options' => $options,
                     ];
                 }

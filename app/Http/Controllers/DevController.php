@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Subscription;
+
 class DevController extends Controller
 {
     /**
@@ -14,14 +16,38 @@ class DevController extends Controller
     public function index()
     {
         //
+        //ver os id do form de algum controlador com o aviso se fields vazio ou não
+        //O aviso de fields vazio foi usado para debugar o tratamento inicial do request recebido pelo
+        //... método store client
         $tabs = (new ClientController())->form();
         foreach ($tabs as $tab)
         {
             foreach ($tab['models'] as $model)
             {
-                echo $model['action']['id'].'<br>';
+                if ( empty($model['fields']) ) {
+                    $msg = ' - fields vazio';
+                }
+                else
+                {
+                    $msg = '';
+                }
+                echo '<input type="checkbox">'.$model['action']['id'].$msg.'<br>';
             }
         }
+
+        //ver os 'name' dos retornados pelo form() de algum model
+        //..tratando-os para serem usados no array para indexa-los por nome
+        //...precisa ir no método e acionar para retornar com o objetivo de deixar sem ordem
+        //...ou retornar a variavel antes do tratamento final
+//        $fields = Subscription::form()[0];
+//        echo '<pre>';
+//        var_dump($fields);
+//        echo '<pre>';
+//        return;
+//        foreach ($fields as $name => $field)
+//        {
+//            echo $field['name'].'<br>';
+//        }
     }
 
     /**

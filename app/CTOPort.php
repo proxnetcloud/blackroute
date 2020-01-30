@@ -124,7 +124,7 @@ class CTOPort extends Model
         }
         $fields = $aux;
 
-        $fields = array_slice($fields, 1);
+//        $fields = array_slice($fields, 1);
         return [$fields];
     }
 }

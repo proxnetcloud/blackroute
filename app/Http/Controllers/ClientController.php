@@ -540,7 +540,7 @@ class ClientController extends Controller
                         ],
                         [
                             'Model' => Phone::class,
-                            'fields' => [],
+                            'fields' => ['number'],
                             'label' => ' 1',
                             'action' => [
                                 'id' => 'phone1',
@@ -551,7 +551,7 @@ class ClientController extends Controller
                         ],
                         [
                             'Model' => Phone::class,
-                            'fields' => [],
+                            'fields' => ['number'],
                             'label' => ' 2',
                             'action' => [
                                 'id' => 'phone2',

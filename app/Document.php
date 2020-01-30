@@ -101,7 +101,7 @@ class Document extends Model
         }
         $fields = $aux;
 
-        $fields = array_slice($fields, 1);
+//        $fields = array_slice($fields, 1);
         return [$fields];
 
         //novo modelo de campo

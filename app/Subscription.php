@@ -123,7 +123,7 @@ class Subscription extends Model
         //'auth_type','status','ip_address','mac_address'
         $field = 'auth_type';
         $$field = [
-            'type' => 'text',
+            'type' => 'select',
             'name' => $field,
             'label' => 'Autenticação',
             'placeholder' => 'Autenticação',
@@ -448,7 +448,7 @@ class Subscription extends Model
         ];
         $fields[$field] = $$field;
 
-        $aux = [];
+//        $aux = [];
         //colocar em uma ordem especificada
 //        $names = ['auth_type','status','ip_address','mac_address','login', 'password','technology',
 //            'financial_api','items_comodato'];
@@ -456,12 +456,12 @@ class Subscription extends Model
 //        {
 //            $aux[] = $fields[$name];
 //        }
-        //colocar sem ordem
-        foreach ($fields as $field)
-        {
-            $aux[] = $field;
-        }
-        $fields = $aux;
+        //colocar sem ordem ou na ordem do Controller::form() ( método form dos controladores )
+//        foreach ($fields as $field)
+//        {
+//            $aux[] = $field;
+//        }
+//        $fields = $aux;
 
         //$fields = array_slice($fields, 0);
         return [$fields];

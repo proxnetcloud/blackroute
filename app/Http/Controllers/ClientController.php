@@ -208,77 +208,79 @@ class ClientController extends Controller
 //                if ( strpos($model['Model']['action']['id'],strtolower($model['Model']) ) !== false )
                 //verificar se o id é semelhante ao nome do model ou é diferente para definir
                 //...se precisa ou não criar novo objeto para aquela classe
-                if ( strpos($id,strtolower($model['Model']) ) !== false )
-                {
-                    if ( array_search($model['Model'], $classes) === false) {
-//                        $classes[] = $model['Model'];
-//                        $ids[] = $model['Model']['action']['id'];
-                        if ( (isset($model['create']) and $model['create']) or !isset($model['create']))
-                        {
-                            $classes[] = $model['Model'];
-//                            $classes[] = [
-                            $classes[$model['Model']] = [
-//                                'class' => $model['Model'],
-                                //                            'id'=>$model['Model']['action']['id'],
-//                                'id' => $id,
-                                $id,
-                            ];
-                        }
-                        else
-                        {
-                            $not_create[] = $id;
-                        }
-                    }
-                    else
-                    {
-                        $classes[$model['Model']][] = $id;
-                    }
-                }
-                else
-                {
-                    $aux = [];
-//                    foreach ($ids as $id)
-                    foreach ($classes as $class => $ids)
-                    {
-                        $aux[] = [
-//                            $class['id'],
-                            $ids[0],
-//                            $model['Model']['action']['id'],
-                            $id,
-                        ];
-                    }
-                    $arr = array_map(function ($params){
-                            if( strpos($params[1],strtolower($params[0])) ===false )
-                            {
-                                return 0;
-                            }
-                            else
-                            {
-                                return 1;
-                            }
-                        }, $aux);
-                    if ( (isset($model['create']) and $model['create']) or !isset($model['create'])) {
-                        if (!is_array('1', $arr)) {
-                            //                        $classes[] = $model['Model'];
-                            //                        $ids[] = $model['Model']['action']['id'];
-//                            $classes[] = [
-//                                'class' => $model['Model'],
-                            $classes[$model['Model']] = [
-                                //                            'id' => $model['Model']['action']['id'],
-//                                'id' => $id,
-                                $id,
-                            ];
-                        }
-                        else
-                        {
-                            $classes[$model['Model']][] = $id;
-                        }
-                    }
-                    else
-                    {
-                        $not_create[] = $id;
-                    }
-                }
+//                if ( strpos($id,strtolower($model['Model']) ) !== false )
+//                {
+//                    if ( array_search($model['Model'], $classes) === false) {
+////                        $classes[] = $model['Model'];
+////                        $ids[] = $model['Model']['action']['id'];
+//                        if ( (isset($model['create']) and $model['create']) or !isset($model['create']))
+//                        {
+//                            $classes[] = $model['Model'];
+////                            $classes[] = [
+////                            $classes[$model['Model']] = [
+//                            $classes1[$model['Model']] = [
+////                                'class' => $model['Model'],
+//                                //                            'id'=>$model['Model']['action']['id'],
+////                                'id' => $id,
+//                                $id,
+//                            ];
+//                        }
+//                        else
+//                        {
+//                            $not_create[] = $id;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        $classes1[$model['Model']][] = $id;
+//                    }
+//                }
+//                else
+//                {
+//                    $aux = [];
+////                    foreach ($ids as $id)
+//                    foreach ($classes as $class => $ids)
+//                    {
+//                        $aux[] = [
+////                            $class['id'],
+//                            $ids[0],
+////                            $model['Model']['action']['id'],
+//                            $id,
+//                        ];
+//                    }
+//                    $arr = array_map(function ($params){
+//                            if( strpos($params[1],strtolower($params[0])) ===false )
+//                            {
+//                                return 0;
+//                            }
+//                            else
+//                            {
+//                                return 1;
+//                            }
+//                        }, $aux);
+//                    if ( (isset($model['create']) and $model['create']) or !isset($model['create'])) {
+//                        if (!is_array('1', $arr)) {
+//                            //                        $classes[] = $model['Model'];
+//                            //                        $ids[] = $model['Model']['action']['id'];
+//                            $classes
+////                            $classes[] = [
+////                                'class' => $model['Model'],
+//                            $classes2[$model['Model']] = [
+//                                //                            'id' => $model['Model']['action']['id'],
+////                                'id' => $id,
+//                                $id,
+//                            ];
+//                        }
+//                        else
+//                        {
+//                            $classes2[$model['Model']][] = $id;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        $not_create[] = $id;
+//                    }
+//                }
                 $ask[$id] = new Request();
                 foreach ($model['fields'] as $field)
                 {
@@ -305,71 +307,110 @@ class ClientController extends Controller
             $as->$aux = $$id->id;
         }
         $prefix = 'App\Http\Controllers';
+        //[model,id]
+        $classes = [
+            ['People','people'],
+            ['People','representative'],
+            ['Phone','phone'],
+            ['Phone','phone'],
+            ['Address','address'],
+            ['Subscription','subscription'],
+            ['FTTH','ftth'],
+            ['CTO_Port','cto_port'],
+            ['ONU','onu'],
+            ['Wireless','wireless'],
+            ['Metro_UTP','metro_utp'],
+            ];
         foreach ($classes as $class)
         {
-            $Model = $class['class'];
+//            $Model = $class['class'];
+            $Model = $class[0];
+//            $Model = $class;
             $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
 //            $return = (new $Controller())->_store($request);;
-            $return = (new $Controller())->_store(new Request);;
+            $return = (new $Controller())->_store(new Request());;
 ////            $return = (new PeopleController())->_store($request);;
             if ( $return[0] == 'error' )
             {
                 return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
             }
-            $company = $return['object'];
-            $request->company_id = $company->id;
+            $object = $class[1];
+//            $company = $return['object'];
+            $$object = $return['object'];
+//            $request->company_id = $company->id;
 
-            $id = 'company';
+//            $id = 'company';
+            $id = $object;
             foreach ($ask as $as)
             {
                 $aux = $id.'_id';
                 $as->$aux = $$id->id;
             }
 
-            $id = 'plan';
-            foreach ($ask as $as)
-            {
-                $aux = $id.'_id';
-                $as->$aux = $ask[$id]->$aux;
-            }
+//            $id = 'plan';
+//            foreach ($ask as $as)
+//            {
+//                $aux = $id.'_id';
+//                $as->$aux = $ask[$id]->$aux;
+//            }
         }
 
-
-
-
+        //ids dos blocos de campos ( models ) que não criam objetos e somente fornecem a informação do id
         $id = 'plan';
         foreach ($ask as $as)
         {
             $aux = $id.'_id';
             $as->$aux = $ask[$id]->$aux;
         }
+        $id = 'cto';
+        foreach ($ask as $as)
+        {
+            $aux = $id.'_id';
+            $as->$aux = $ask[$id]->$aux;
+        }
 
-        $Models = ['People','Phone','Address','Client','Subscription'];
+//        $Models = ['People','Phone','Address','Client','Subscription'];
 //        $vars = [];
 
-        foreach ($Models as $Model)
-        {
-            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
+//        foreach ($classes as $class)
+//        {
+//            $Model = $class['class'];
+//            $Model = $class[0];
+//        foreach ($Models as $Model)
+//        {
+//            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
 //            $return = (new $Controller())->_store($request);;
-            $return = (new $Controller())->_store(new Request);;
-////            $return = (new PeopleController())->_store($request);;
-            if ( $return[0] == 'error' )
-            {
-                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-            }
-            $company = $return['object'];
-            $request->company_id = $company->id;
+//            $return = (new $Controller())->_store(new Request);;
+//            $return = (new $Controller())->_update($ask[],$user->id);;
+//            $return = (new PeopleController())->_store($request);;
+//            if ( $return[0] == 'error' )
+//            {
+//                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+//            }
+//            $company = $return['object'];
+//            $request->company_id = $company->id;
 //            // Simular as duas linhas acima .
 //            $vars[strtolower($Model)] = $return['object'];
 //            $model = strtolower($Model);
 //            $request->$model = $vars[strtolower($Model)]->id;
-            $id = 'address';
-            foreach ($ask as $as)
-            {
-                $aux = $id.'_id';
-                $as->$aux = $$id->id;
-            }
+//            $id = 'address';
+//            foreach ($ask as $as)
+//            {
+//                $aux = $id.'_id';
+//                $as->$aux = $$id->id;
+//            }
+//        }
+
+        $Model = 'People';
+        $id = 'people';
+        $object_id = 'people_id';
+        $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
+        $return = (new $Controller())->_update($ask[$id],$ask[$id]->$object_id);///
+        if ( $return[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
         }
+
 
 //        $Models = ['People','Phone','Address','Client','Subscription'];
 //        $Controller = ucfirst(strtolower($Model)).'Controller';
@@ -744,7 +785,8 @@ class ClientController extends Controller
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'subscription1580419318677',
+//                                'id' => 'subscription1580419318677',
+                                'id' => 'plan',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',
@@ -801,7 +843,8 @@ class ClientController extends Controller
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'cto_port',
+                                'id' => 'cto',
+//                                'id' => 'cto_port',
                                 'class' => 'ftth',
                                 'display' => '',
                             ],

@@ -180,6 +180,7 @@ class ClientController extends Controller
 
         //classes model dos objects a criar
         $classes = [];
+        $not_create = [];
         //ids das classes model adicionadas a $classes
 //        $ids = []
         $form = $this->form();
@@ -205,26 +206,43 @@ class ClientController extends Controller
                     );
                 }
 //                if ( strpos($model['Model']['action']['id'],strtolower($model['Model']) ) !== false )
+                //verificar se o id é semelhante ao nome do model ou é diferente para definir
+                //...se precisa ou não criar novo objeto para aquela classe
                 if ( strpos($id,strtolower($model['Model']) ) !== false )
                 {
                     if ( array_search($model['Model'], $classes) === false) {
 //                        $classes[] = $model['Model'];
 //                        $ids[] = $model['Model']['action']['id'];
-                        $classes[] = [
-                            'class'=>$model['Model'],
-//                            'id'=>$model['Model']['action']['id'],
-                            'id'=>$id,
-                        ];
+                        if ( (isset($model['create']) and $model['create']) or !isset($model['create']))
+                        {
+                            $classes[] = $model['Model'];
+//                            $classes[] = [
+                            $classes[$model['Model']] = [
+//                                'class' => $model['Model'],
+                                //                            'id'=>$model['Model']['action']['id'],
+//                                'id' => $id,
+                                $id,
+                            ];
+                        }
+                        else
+                        {
+                            $not_create[] = $id;
+                        }
+                    }
+                    else
+                    {
+                        $classes[$model['Model']][] = $id;
                     }
                 }
                 else
                 {
                     $aux = [];
 //                    foreach ($ids as $id)
-                    foreach ($classes as $class)
+                    foreach ($classes as $class => $ids)
                     {
                         $aux[] = [
-                            $class['id'],
+//                            $class['id'],
+                            $ids[0],
 //                            $model['Model']['action']['id'],
                             $id,
                         ];
@@ -239,14 +257,26 @@ class ClientController extends Controller
                                 return 1;
                             }
                         }, $aux);
-                    if ( !is_array('1',$arr) ) {
-//                        $classes[] = $model['Model'];
-//                        $ids[] = $model['Model']['action']['id'];
-                        $classes[] = [
-                            'class' => $model['Model'],
-//                            'id' => $model['Model']['action']['id'],
-                            'id' => $id,
-                        ];
+                    if ( (isset($model['create']) and $model['create']) or !isset($model['create'])) {
+                        if (!is_array('1', $arr)) {
+                            //                        $classes[] = $model['Model'];
+                            //                        $ids[] = $model['Model']['action']['id'];
+//                            $classes[] = [
+//                                'class' => $model['Model'],
+                            $classes[$model['Model']] = [
+                                //                            'id' => $model['Model']['action']['id'],
+//                                'id' => $id,
+                                $id,
+                            ];
+                        }
+                        else
+                        {
+                            $classes[$model['Model']][] = $id;
+                        }
+                    }
+                    else
+                    {
+                        $not_create[] = $id;
                     }
                 }
                 $ask[$id] = new Request();
@@ -710,10 +740,11 @@ class ClientController extends Controller
 //                            'Model'=> Plan::class,
                             'Model'=> 'Plan',
                             'fields' => ['plan_id'],
+                            'create' => false,
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'plan',
+                                'id' => 'subscription1580419318677',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',

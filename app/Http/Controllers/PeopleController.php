@@ -84,9 +84,26 @@ class PeopleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // para permitir gerar alias
+    public function _1580497709152(Request $request,$id)
+    {
+        return SystemController::__update(People::class,$id,$request);
+    }
+    public function _update(Request $request,$id)
+    {
+        return $this->_1580497709152($request,$id);
+    }
+    public function update(Request $request,$id)
     {
         //
+//        $return = $this->_123($request,$id);
+//        if ( $return[0] == 'error' )
+        $retorno = $this->_1580497709152($request,$id);
+        if ( $retorno[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1580497709152 .');
+        }
+        return redirect()->back()->with('message',$request->_message);
     }
 
     /**

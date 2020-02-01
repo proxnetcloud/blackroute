@@ -33,12 +33,22 @@ Tip 2: you can also add an image using data-image tag
                     <ul class="nav">
                         <li class="nav-item @if($activePage == 'register_client') active @endif">
                             <a class="nav-link" href="{{route('client.create')}}">
-{{--                                <i class="nc-icon nc-single-02"></i>--}}
-{{--                                <p>{{ __("User Profile") }}</p>--}}
+                                {{--                                <i class="nc-icon nc-single-02"></i>--}}
+                                {{--                                <p>{{ __("User Profile") }}</p>--}}
                                 <p>&nbsp;&nbsp;Cadastrar</p>
-{{--                                @if('modo detalhado ativo')--}}
-{{--                                    <p>Cadastrar Client</p>--}}
-{{--                                @endif--}}
+                                {{--                                @if('modo detalhado ativo')--}}
+                                {{--                                    <p>Cadastrar Client</p>--}}
+                                {{--                                @endif--}}
+                            </a>
+                        </li>
+                        <li class="nav-item @if($activePage == 'list_client') active @endif">
+                            <a class="nav-link" href="{{route('client.index')}}">
+                                {{--                                <i class="nc-icon nc-single-02"></i>--}}
+                                {{--                                <p>{{ __("User Profile") }}</p>--}}
+                                <p>&nbsp;&nbsp;Listar</p>
+                                {{--                                @if('modo detalhado ativo')--}}
+                                {{--                                    <p>Cadastrar Client</p>--}}
+                                {{--                                @endif--}}
                             </a>
                         </li>
 {{--                        <li class="nav-item @if($activePage == 'user-management') active @endif">--}}

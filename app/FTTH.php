@@ -145,8 +145,8 @@ class FTTH extends Model
         $$field = [
             'type' => 'select',
             'name' => $field,
-            'label' => 'OLT',
-            'placeholder' => 'OLT',
+            'label' => 'Porta PON',
+            'placeholder' => 'Porta PON',
             'options' => $options,
         ];
         $fields[$field] = $$field;
@@ -178,7 +178,7 @@ class FTTH extends Model
         }
         $fields = $aux;
 
-        $fields = array_slice($fields, 1);
+//        $fields = array_slice($fields, 1);
         return [$fields];
     }
 }

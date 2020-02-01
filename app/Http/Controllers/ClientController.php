@@ -30,6 +30,256 @@ class ClientController extends Controller
     public function index()
     {
         //
+        $relation = 'clients';
+//        $columns = ['name','cpf','email'];
+        $columns = ['Nome','Status','Plano','IP','Auth','Login','Endereço','Ações'];
+        //objectos internos são seguidos por $ e string sem $
+        $lines_ = [
+            [
+//                '$client','$people','$name',
+                '$people','$name',
+                '<br>','CPF / CNPJ : ',
+//                '$client','$people','$cpf',
+                '$people','$cpf',
+                '<br>','EMAIL : ',
+//                '$client','$people','$email',
+                '$people','$email',
+            ],
+            [
+                '',
+            ],
+            [
+                '$subscription','$plan','$name',
+            ],
+            [
+                '$subscription','$ip_address',
+            ]
+        ];
+
+        $buttons = [];
+        //model
+//        $button = [
+//            'type' => '',//link or form
+//            'route' => [
+//                'route' => '',
+//                'params' => '',
+//            ],
+//            'finality' => '',//edit or delete
+//        ];
+//        $buttons[] = $button;
+//        $button = [
+//            'type' => '',//link or form
+//            'route' => [
+//                'route' => '',
+//                'params' => '',
+//            ],
+//            'finality' => '',//edit or delete
+//        ];
+//        $buttons[] = $button;
+////        $lines = \DB::table($table)->select('name', 'email as user_email')->get();
+////        $lines = \DB::table($table)->get();
+////        $lines = Client::all();
+////        $lines = \Auth::user()->company->clients;
+//        $lines = [];
+        $clients = \Auth::user()->company->clients;
+        $company = \Auth::user()->company;
+//        echo json_encode($company);
+//        echo json_encode($clients);
+//        echo '<br>';
+        foreach ($clients as $client) {
+            $aux = [];
+
+            $button = [
+                'type' => 'link',//link or form
+                'route' => [
+                    'route' => 'client.edit',
+                    'params' => [$client->id],
+                ],
+                'finality' => 'edit',//edit or delete
+            ];
+            $aux[] = $button;
+
+            $button = [
+                'type' => 'form',//link or form
+                'route' => [
+                    'route' => 'client.destroy',
+                    'params' => [$client->id],
+                ],
+                'finality' => 'delete',//edit or delete
+            ];
+            $aux[] = $button;
+
+            $buttons[] = $aux;
+//            $line = [];
+//            $line[0] = $client->people->name.
+//                '<br>'.'CPF / CNPJ : '.$client->people->cpf.
+//                '<br>'.'EMAIL : '.$client->people->email;
+//            $line[1] = '';
+//            $line[2] = $client->subscription->plan->name;
+//            $line[3] =
+//            $client->subscription;
+        }
+
+        $params = [
+//            'objects' => 'clients',
+            'objects' => $relation,
+            'lines' => $lines_,
+            'columns' => $columns,
+        ];
+        $retorno = ClientController::_index($params);
+        if ( $retorno[0] == 'erro' ) {
+            return;
+        }
+        $lines = $retorno['lines'];
+        $links = $retorno['links'];
+
+//        echo json_encode($buttons);
+//        echo '<br>';
+
+//        echo '<br>';
+//        echo json_encode($lines);
+//        echo '<br>';
+//        return;
+        $vars =
+            [
+                'links' => $links,
+                'columns' => $columns,
+                'lines' => $lines,
+                'buttons' => $buttons,
+//                    'route'=>$route,
+                    //                'fields'=> $fields,
+//                    'tabs'=> $tabs,
+//                    'values' => $values,
+//            'activePage' => $params['activePage'],
+//            'activeButton' => $params['activeButton'],
+                'activePage' => 'list_client',
+                'activeButton' => 'client',
+                    //                'actions' => $actions,
+//                'actions' => $params['actions'],
+            ];
+        return view('list',$vars);
+    }
+    public static function _index($params)
+    {
+//        $columns = [];
+        $columns = $params['columns'];
+//        $lines = [];
+        $lines = $params['lines'];
+        $objects = $params['objects'];
+//        $clients = \Auth::user()->company->clients;
+//        echo $objects;
+//        echo '<br>';
+//        $$objects = \Auth::user()->company->$objects->paginate(3);
+//        $$objects = \Auth::user()->company->$objects;
+        $$objects = Client::where('company_id',\Auth::user()->company->id)->paginate(3);
+//        echo json_encode($$objects);
+//        echo '<br>';
+//        $clients = \Auth::user()->company->clients;
+//        echo json_encode($clients);
+//        echo '<br>';
+        $lines_ = [];
+        foreach ($$objects as $object) {
+            $i = -1;
+            $columns__ = $lines;
+            $columns_ = [];
+            foreach ($lines as $line)
+            {
+                $i++;
+                $line_ = [];
+//                $line_[$i] = '';
+//                echo json_encode($columns[$i]);
+//                echo '<br>';
+//                echo json_encode($i);
+//                echo '<br>';
+                $line_[$columns[$i]] = '';
+                $aux = $object;
+                $j = 0;
+                //verifica se a $string anterior foi uma string
+                //verifica se é para não add a var recuperada do DB
+                $flag = 1;
+                foreach ($line as $string)
+                {
+                    $j++;
+                    if ( strpos($string,'$') === 0) {
+                        echo '111';
+                        echo '<br>';
+                        echo json_encode($aux);
+                        echo '<br>';
+                        echo $string;
+                        echo '<br>';
+                        $string = substr($string, 1);
+                        try {
+                            $aux = $aux->$string;
+                            $flag = 0;
+                        }catch (\Exception $e)
+                        {
+                            $aux = $object;
+                            $flag = 1;
+                        }
+//                        echo json_encode($aux);
+//                        echo '<br>';
+                        if ( count($line) == $j) {
+                            $line_[$columns[$i]] .= $aux;
+                            echo 'end';
+                            echo '<br>';
+                            echo $aux;
+                            echo '<br>';
+                            echo $string;
+                            echo '<br>';
+                            $flag = 0;
+                        }
+//                        $flag = 0;
+                    }
+                    else
+                    {
+//                        if ( count($line) != $j ) {
+//                        echo $string;
+//                        echo '<br>';
+                        if ( $flag == 0) {
+                            $line_[$columns[$i]] .= $aux . $string;
+//                            echo '2';
+//                            echo '<br>';
+//                            echo $aux;
+//                            echo '<br>';
+                            $aux = $object;
+                        }
+                        else
+                        {
+                            $line_[$columns[$i]] .= $string;
+                        }
+                        $flag = 1;
+//                        }
+                    }
+//                    if ( count($line) == $j)
+//                    {
+//                        $line_[$columns[$i]] .= $aux.$string;
+//                        $aux = $object;
+//                    }
+                }
+//                echo json_encode($line_);
+//                echo '<br>';
+//                echo '1';
+//                echo '<br>';
+//                $lines_[]=$line_;
+//                $columns_[] = $line_;
+                $columns_[] = $line_[$columns[$i]];
+//                echo json_encode($lines_);
+//                echo '<br>';
+            }
+            $lines_[]=$columns_;
+//            $line = [];
+//            $line[0] = $object->people->name.
+//                '<br>'.'CPF / CNPJ : '.$client->people->cpf.
+//                '<br>'.'EMAIL : '.$client->people->email;
+//            $line[1] = '';
+//            $line[2] = $client->subscription->plan->name;
+//            $line[3] =
+//                $client->subscription;
+        }
+//        echo json_encode($lines_);
+//        echo '<br>';
+        return ['','lines'=>$lines_,'links'=>$$objects];
+        return ['erro'];
     }
 
     /**
@@ -37,11 +287,12 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // para permitir gerar alias
-    public function _1579976504619()
+    //criado para ser usado em TesterController para não precisar refazer o trabalho de consultar os model
+    public static function params()
     {
 //        $ModelsFields = [ 'tabs' =>
-        $tabs = $this->form();
+//        $tabs = $this->form();
+        $tabs = ClientController::form();
 //        return SystemController::__create($ModelsFields,'client.store');
 
 //        $fields = [];
@@ -68,7 +319,7 @@ class ClientController extends Controller
                 [
 //                    'id' => 'representative',//id do model desse campo
                     'id' => 'representative',//class que é para ser mostrada quando selecionada a opção referida
-                                                //...as outras class dessa action são ocultadas
+                    //...as outras class dessa action são ocultadas
                     'select' => 'person',
                     'option' => 'juridica',
                 ],
@@ -81,25 +332,25 @@ class ClientController extends Controller
             [//se é apenas para mostrar e ocultar um único conjunto de classe , deixar preenchido com somente um action
                 [
                     'id' => 'ftth',//class que é para ser mostrada quando selecionada a opção referida
-                                    //...as outras class dessa action são ocultadas
+                    //...as outras class dessa action são ocultadas
                     'select' => 'technology',
                     'option' => 'ftth',
                 ],
                 [
                     'id' => 'w24',//class que é para ser mostrada quando selecionada a opção referida
-                                    //...as outras class dessa action são ocultadas
+                    //...as outras class dessa action são ocultadas
                     'select' => 'technology',
                     'option' => 'w24',
                 ],
                 [
                     'id' => 'w58',//class que é para ser mostrada quando selecionada a opção referida
-                                    //...as outras class dessa action são ocultadas
+                    //...as outras class dessa action são ocultadas
                     'select' => 'technology',
                     'option' => 'w58',
                 ],
                 [
                     'id' => 'metro_utp',//class que é para ser mostrada quando selecionada a opção referida
-                                    //...as outras class dessa action são ocultadas
+                    //...as outras class dessa action são ocultadas
                     'select' => 'technology',
                     'option' => 'metro_utp',
                 ],
@@ -117,6 +368,13 @@ class ClientController extends Controller
             'activeButton' => 'client',
             'actions'=>$actions,
         ];
+        return $params;
+    }
+    // para permitir gerar alias
+    public function _1579976504619()
+    {
+//        $params = $this->params();
+        $params = ClientController::params();
         return SystemController::form($params);
     }
     //chamada de metodo sem redirect
@@ -164,8 +422,23 @@ class ClientController extends Controller
 //        }
 //        return redirect()->back()->with('message',$request->_message);
 //    }
+    //recebe o pedido da rota
     public function store(Request $request)
     {
+        //
+        $return = ClientController::__store($request);
+        if ( $return[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1580495818551 em '.$return['msg']);
+        }
+        return redirect()->back()->with('message','Cliente '.$return['client'].' cadastrado com sucesso .');
+    }
+    //processa o request recebido do formulário pela rota e passada para esse method que tbm guarda no DB
+    public static function __store(Request $request)
+    {
+        $controlller = 'Client';
+        $prefix = 'App\Http\Controllers\\';
+        $Controller = $prefix.$controlller.'Controller';
         //
 //        People::class;
 //        Phone::class;
@@ -183,12 +456,20 @@ class ClientController extends Controller
         $not_create = [];
         //ids das classes model adicionadas a $classes
 //        $ids = []
-        $form = $this->form();
+//        $form = $this->form();
+        $form = $Controller::form();
         $ask = [];
+        $ask['client'] = new Request();
+        echo '<br>';
+        echo '<br>';
+        echo json_encode($request);
+        echo '<br>';
+        echo '<br>';
         //$ask[$id] = new Request();
         foreach ($form as $tab)
         {
-            foreach ($tab['fields'] as $model)
+//            foreach ($tab['fields'] as $model)
+            foreach ($tab['models'] as $model)
             {
 //                $fields = $model['Model']::form()[0];
                 if ( isset($model['action']['id']) )
@@ -286,7 +567,24 @@ class ClientController extends Controller
                 {
                     //tratar se $field estiver vazia...pegar o Model::form() e o name e ir
                     $aux = $field.'__'.$id;
+//                    echo $aux;
+//                    echo '<br>';
                     $ask[$id]->$field = $request->$aux;
+//                    echo $request->$aux;
+//                    echo '<br>';
+//                    echo $ask[$id]->$field;
+//                    echo '<br>';
+                }
+                if (!count($model['fields']))
+                {
+                    $Model = 'App\\'.$model['Model'];
+                    $fields = $Model::form()[0];
+                    foreach ($fields as $field)
+                    {
+                        $field = $field['name'];
+                        $aux = $field.'__'.$id;
+                        $ask[$id]->$field = $request->$aux;
+                    }
                 }
 //                foreach ($fields as $field)
 //                {
@@ -306,33 +604,42 @@ class ClientController extends Controller
             $aux = $id.'_id';
             $as->$aux = $$id->id;
         }
-        $prefix = 'App\Http\Controllers';
+        $prefix = 'App\Http\Controllers\\';
         //[model,id]
         $classes = [
+            ['Client','client'],
             ['People','people'],
+            ['People','mother'],
             ['People','representative'],
-            ['Phone','phone'],
-            ['Phone','phone'],
+            ['Phone','phone1'],
+            ['Phone','phone2'],
+            ['Phone','whatsapp'],
             ['Address','address'],
             ['Subscription','subscription'],
             ['FTTH','ftth'],
             ['CTO_Port','cto_port'],
             ['ONU','onu'],
-            ['Wireless','wireless'],
+            ['Wireless','w24'],
+            ['Wireless','w58'],
             ['Metro_UTP','metro_utp'],
+            ['DocumentSubscription','document_subscription']
             ];
         foreach ($classes as $class)
         {
 //            $Model = $class['class'];
             $Model = $class[0];
 //            $Model = $class;
-            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
+//            $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
+            $Controller = $prefix.$Model.'Controller';
 //            $return = (new $Controller())->_store($request);;
-            $return = (new $Controller())->_store(new Request());;
+            $return = (new $Controller())->_store(new Request());
 ////            $return = (new PeopleController())->_store($request);;
             if ( $return[0] == 'error' )
             {
-                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+//                return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+//                return $return;
+//                return ['error','msg'=>'#1579739493157 Model '.$Model.' return[0] '.$return[0]];
+                return ['error','msg'=>'#1579739493157 Model '.$Model];
             }
             $object = $class[1];
 //            $company = $return['object'];
@@ -354,6 +661,8 @@ class ClientController extends Controller
 //                $as->$aux = $ask[$id]->$aux;
 //            }
         }
+        echo json_encode($ask['address']);
+        echo '<br>';
 
         //ids dos blocos de campos ( models ) que não criam objetos e somente fornecem a informação do id
         $id = 'plan';
@@ -363,6 +672,12 @@ class ClientController extends Controller
             $as->$aux = $ask[$id]->$aux;
         }
         $id = 'cto';
+        foreach ($ask as $as)
+        {
+            $aux = $id.'_id';
+            $as->$aux = $ask[$id]->$aux;
+        }
+        $id = 'document';
         foreach ($ask as $as)
         {
             $aux = $id.'_id';
@@ -401,160 +716,281 @@ class ClientController extends Controller
 //            }
 //        }
 
+        $arr = [];
+
+        $Model = 'Client';
+        $id = 'client';//model['action']['id']
+        $object_id = 'client';//$classes[1]
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
         $Model = 'People';
-        $id = 'people';
-        $object_id = 'people_id';
-        $Controller = $prefix.ucfirst(strtolower($Model)).'Controller';
-        $return = (new $Controller())->_update($ask[$id],$ask[$id]->$object_id);///
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
+        $id = 'people';//model['action']['id']
+        $object_id = 'people';//$classes[1]
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
 
+        $Model = 'People';
+        $id = 'mother';//model['action']['id']
+        $object_id = 'mother';//$classes[1]
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
 
-//        $Models = ['People','Phone','Address','Client','Subscription'];
-//        $Controller = ucfirst(strtolower($Model)).'Controller';
-//        $return = (new AddressController())->_store($request);;
-        $return = (new AddressController())->_store($ask['address']);;
-//            $return = (new PeopleController())->_store($request);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        //não comentado embora tenha-se mudado depois do user pronto para...
-        //...varios address para um object
-        $address = $return['object'];
-        $request->address_id = $address->id;
-        // Simular as duas linhas acima .
-//        $vars[strtolower($Model)] = $return['object'];
-//        $model = strtolower($Model);
-//        $request->$model = $vars[strtolower($Model)]->id;
-        $id = 'address';
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
-        }
+        $Model = 'People';
+        $id = 'people2';
+        $object_id = 'people';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
 
-//        $Models = ['People','Phone','Address','Client','Subscription'];
-//        $Controller = ucfirst(strtolower($Model)).'Controller';
-//        $return = (new PeopleController())->_store($request);;
-        $return = (new PeopleController())->_store($ask['people']);;
-//            $return = (new $Controller())->_store($request);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        $people = $return['object'];
-        $request->people_id = $people->id;
-        // Simular as duas linhas acima .
-//        $vars[strtolower($Model)] = $return['object'];
-//        $model = strtolower($Model);
-//        $request->$model = $vars[strtolower($Model)]->id;
-        $id = 'people';
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
-        }
+        $Model = 'People';
+        $id = 'people3';
+        $object_id = 'people';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
 
-//        $Models = ['People','Phone','Address','Client','Subscription'];
-//        $Controller = ucfirst(strtolower($Model)).'Controller';
-//        $return = (new PhoneController())->_store($request);;
-        $return = (new PhoneController())->_store($ask['phone']);;
-//            $return = (new PeopleController())->_store($request);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        //comentado pois sempre é um object para varios phones e não o contrario
-//        $phone = $return['object'];
-//        $request->phone_id = $phone->id;
-        // Simular as duas linhas acima .
-//        $vars[strtolower($Model)] = $return['object'];
-//        $model = strtolower($Model);
-//        $request->$model = $vars[strtolower($Model)]->id;
-        $id = 'phone';
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
-        }
+        $Model = 'People';
+        $id = 'people4';
+        $object_id = 'people';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
 
-//        $Models = ['People','Phone','Address','Client','Subscription'];
-//        $Controller = ucfirst(strtolower($Model)).'Controller';
-//        $return = (new ClientController())->_store($request);;
-        $return = (new ClientController())->_store($ask['client']);;
-//            $return = (new PeopleController())->_store($request);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        $client = $return['object'];
-        $request->client_id = $client->id;
-        // Simular as duas linhas acima .
-//        $vars[strtolower($Model)] = $return['object'];
-//        $model = strtolower($Model);
-//        $request->$model = $vars[strtolower($Model)]->id;
-        $id = 'client';
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
-        }
-
-//        $Models = ['People','Phone','Address','Client','Subscription'];
-//        $Controller = ucfirst(strtolower($Model)).'Controller';
-        $return = (new SubscriptionController())->_store($ask['subscription']);;
-//        $return = (new SubscriptionController())->_store($request);
-//            $return = (new PeopleController())->_store($request);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        $subscription = $return['object'];
-        $request->subscription_id = $subscription->id;
-        // Simular as duas linhas acima .
-//        $vars[strtolower($Model)] = $return['object'];
-//        $model = strtolower($Model);
-//        $request->$model = $vars[strtolower($Model)]->id;
-        $id = 'subscription';
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
-        }
-
+        $Model = 'People';
         $id = 'representative';
-        $return = (new PeopleController())->_store($ask[$id]);;
-        if ( $return[0] == 'error' )
-        {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-        }
-        $$id = $return['object'];
-//        $request->subscription_id = $subscription->id;
-        foreach ($ask as $as)
-        {
-            $aux = $id.'_id';
-            $as->$aux = $$id->id;
+        $object_id = 'representative';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'People';
+        $id = 'people6';
+        $object_id = 'people';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'People';
+        $id = 'people7';
+        $object_id = 'people';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Phone';
+        $id = 'phone1';
+        $object_id = 'phone1';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Phone';
+        $id = 'phone2';
+        $object_id = 'phone2';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Phone';
+        $id = 'whatsapp';
+        $object_id = 'whatsapp';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+        $ask[$id]->type = 'whatsapp';
+
+        $Model = 'Address';
+        $id = 'address';
+        $object_id = 'address';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Subscription';
+        $id = 'subscription';
+        $object_id = 'subscription';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Subscription';
+        $id = 'subscription2';
+        $object_id = 'subscription';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'FTTH';
+        $id = 'ftth';
+        $object_id = 'ftth';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'CTO_Port';
+        $id = 'cto_port2';
+        $object_id = 'cto_port';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'ONU';
+        $id = 'onu';
+        $object_id = 'onu';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'FTTH';
+        $id = 'ftth2';
+        $object_id = 'ftth';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Wireless';
+        $id = 'w24';
+        $object_id = 'w24';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Wireless';
+        $id = 'w58';
+        $object_id = 'w58';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Metro_UTP';
+        $id = 'metro_utp';
+        $object_id = 'metro_utp';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Wireless';
+        $id = 'w24';
+        $object_id = 'w24';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Wireless';
+        $id = 'w58';
+        $object_id = 'w58';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Metro_UTP';
+        $id = 'metro_utp';
+        $object_id = 'metro_utp';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'DocumentSubscription';
+        $id = 'document';
+        $object_id = 'document_subscription';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        $Model = 'Subscription';
+        $id = 'subscription3';
+        $object_id = 'subscription';
+        $arr[] = [
+            'model'=>$Model,
+            'id' => $id,
+            'object_id' => $object_id,
+        ];
+
+        foreach ($arr as $ar) {
+
+            $Model = $ar['model'];
+            $id = $ar['id'];
+            $object_id = $ar['object_id'].'_id';
+
+//            $Controller = $prefix . ucfirst(strtolower($Model)) . 'Controller';
+            $Controller = $prefix . $Model . 'Controller';
+//            echo $object_id;
+//            echo '<br>';
+//            echo $ask[$id]->$object_id;
+//            echo '<br>';
+            $return = (new $Controller())->_update($ask[$id], $ask[$id]->$object_id);///
+            if ($return[0] == 'error') {
+                if ( isset($return['msg']) ) {
+                    $em = $return['msg'];
+                }
+                return ['error','msg'=>'#1580499345818 Model '.$Model.' em '.$em];
+//                return redirect()->back()->with('message', 'Ocorreu um erro #1579739493157 .');
+            }
         }
 
-//        $return = (new UserController())->_update($request,$user->id);;
+        return ['sucess','client'=>$people->name,'objects'=>$classes];
+        //return ['error','client'=>$people->name];
 //        if ( $return[0] == 'error' )
-//        {
-//            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-//        }
-//        $user = $return['object'];
-//
-//        $return = (new AddressController())->_store($request);;
-//        if ( $return[0] == 'error' )
-//        {
-//            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
-//        }
-//        $address = $return['object'];
-        return redirect()->back()
-            ->with("message",
-                "Cliente ".$people->name." cadastrado com sucesso .");
+
+//        return redirect()->back()
+//            ->with("message",
+//                "Cliente ".$people->name." cadastrado com sucesso .");
 //                "Cliente ".$vars['people']->name." cadastrado com sucesso .");
 //        return redirect()->route('home')
 //            ->with("message",
@@ -590,9 +1026,26 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // para permitir gerar alias
+    public function _1580503545817(Request $request,$id)
+    {
+        return SystemController::__update(Client::class,$id,$request);
+    }
+    public function _update(Request $request,$id)
+    {
+        return $this->_1580503545817($request,$id);
+    }
+    public function update(Request $request,$id)
     {
         //
+//        $return = $this->_123($request,$id);
+//        if ( $return[0] == 'error' )
+        $retorno = $this->_1580503545817($request,$id);
+        if ( $retorno[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1580503545817 .');
+        }
+        return redirect()->back()->with('message',$request->_message);
     }
 
     /**
@@ -606,7 +1059,7 @@ class ClientController extends Controller
         //
     }
 
-    public function form()
+    public static function form()
     {
         //o primeiro id de um objeto a ser criado precisa ser sem o número 1
         //people,people2,people3,...ao inves de people1,people2,people3
@@ -693,7 +1146,22 @@ class ClientController extends Controller
                         [
 //                            'Model' => People::class,
                             'Model' => 'People',
-                            'fields' => ['rg'],
+                            'fields' => ['name'],
+                            'label' => ' da mãe',
+                            'action' => [
+                                'id' => 'mother',
+                                'class' => 'rg',
+//                                'display' => 'none',
+//                                'select' => 'person',
+//                                'option' => 'juridica',
+                            ],
+                            //                'fields' => false,
+                            //                'fields' => ['field1','field2'],
+                        ],
+                        [
+//                            'Model' => People::class,
+                            'Model' => 'People',
+                            'fields' => ['rg','birth'],
                             'action' => [
                                 'id' => 'people6',
                                 'class' => 'rg',
@@ -707,7 +1175,7 @@ class ClientController extends Controller
                         [
 //                            'Model' => People::class,
                             'Model' => 'People',
-                            'fields' => ['birth','email','civil_state'],
+                            'fields' => ['email','civil_state'],
                             'action' => [
                                 'id' => 'people7',
 //                                'display' => 'none',
@@ -736,6 +1204,18 @@ class ClientController extends Controller
                             'label' => ' 2',
                             'action' => [
                                 'id' => 'phone2',
+//                                'display' => '',
+//                                'select' => '',
+//                                'option' => '',
+                            ],
+                        ],
+                        [
+//                            'Model' => Phone::class,
+                            'Model' => 'Phone',
+                            'fields' => ['number'],
+                            'label' => ' WhatsApp',
+                            'action' => [
+                                'id' => 'whatsapp',
 //                                'display' => '',
 //                                'select' => '',
 //                                'option' => '',
@@ -794,7 +1274,7 @@ class ClientController extends Controller
                         ],
                         [
 //                            'Model'=> Subscription::class,
-                            'Model'=> 'Subcription',
+                            'Model'=> 'Subscription',
                             'fields' => ['auth_type','status','ip_address','mac_address','login', 'password',],
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
@@ -935,7 +1415,7 @@ class ClientController extends Controller
                             //                'fields' => false,
                             //                'fields' => ['field1','field2'],
                             'action' => [
-                                'id' => 'contrato',
+                                'id' => 'document',
                                 'display' => '',
                             ],
                         ],

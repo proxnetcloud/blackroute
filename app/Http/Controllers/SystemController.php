@@ -105,19 +105,50 @@ class SystemController extends Controller
 
     public static function __update($Class,$id,Request $request)
     {
+//        echo '<br>';
+//        echo json_encode($request);
+//        echo '<br>';
+        if ( $id == '' )
+        {
+            return ['error','msg'=>'#1580498638552 Class '.$Class];
+        }
         $object = $Class::where('id',$id)->first();
         $fields = $Class::fields();
         foreach ($fields as $field)
         {
             if ( isset($request->$field))
             {
-                $object->$field = $request->$field;
+//                if ( !empty($request->$field) ) {
+                if ( $request->$field != '' ) {
+//                    try {
+                        $object->$field = $request->$field;
+//                    }catch (\Exception $e)
+//                    {
+//                        echo json_encode($e->getMessage());
+//                        echo '<br>';
+//                        echo $request->$field;
+//                        echo '<br>';
+//                        echo $field;
+//                        echo '<br>';
+//                        echo $Class;
+//                        echo '<br>';
+//                        echo $id;
+//                        $object->save();
+//                        echo $object->id;
+//                        echo '<br>';
+//                        echo 'ok';
+//                    }
+                }
+            }
+            else
+            {
+//                echo $Class.':'.$field.'<br>';
             }
         }
         $object->save();
         return ['sucess','object'=>$object];
         //exemple 2 padronizado
-        return ['error','object'=>$object];
+//        return ['error','object'=>$object];
     }
 
 
@@ -158,7 +189,7 @@ class SystemController extends Controller
         $return = (new CompanyController())->_store($request);;
         if ( $return[0] == 'error' )
         {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+            return redirect()->back()->with('message','Ocorreu um erro #1580499411017.');
         }
         $company = $return['object'];
         //criar user
@@ -176,14 +207,14 @@ class SystemController extends Controller
         $return = (new UserController())->_update($request,$user->id);;
         if ( $return[0] == 'error' )
         {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+            return redirect()->back()->with('message','Ocorreu um erro #1580499435917 .');
         }
         $user = $return['object'];
 
         $return = (new AddressController())->_store($request);;
         if ( $return[0] == 'error' )
         {
-            return redirect()->back()->with('message','Ocorreu um erro #1579739493157.');
+            return redirect()->back()->with('message','Ocorreu um erro #1580499450616 .');
         }
         $address = $return['object'];
         //atualizar company
@@ -280,8 +311,9 @@ class SystemController extends Controller
             ]);
     }
 
-    public static function form($params)
+    public static function params($params)
     {
+        $prefix = 'App\\';
 //        $ModelsFieldsIDs = $params['ModelsFieldsIDs'] ;
         $route = $params['route'] ;
         $form = $params['form'] ;
@@ -312,6 +344,7 @@ class SystemController extends Controller
 //                $aux = [];
 //                $_model = $aux;
                 $_model = [];
+                $_model['Model'] = $Model['Model'];
                 if ( isset($Model['label'])) {
                     $_model['label'] = $Model['label'];
                 }
@@ -571,16 +604,26 @@ class SystemController extends Controller
 //        echo json_encode($tabs);
 //        echo '<pre>';
 //        return;
-        return view($form,
-            [
-                'route'=>$route,
-//                'fields'=> $fields,
-                'tabs'=> $tabs,
-                'values' => $values,
-                'activePage' => $params['activePage'],
-                'activeButton' => $params['activeButton'],
-//                'actions' => $actions,
-                'actions' => $params['actions'],
-            ]);
+        $params = [
+            'form' => $form,
+            'params' =>
+                [
+                    'route'=>$route,
+    //                'fields'=> $fields,
+                    'tabs'=> $tabs,
+                    'values' => $values,
+                    'activePage' => $params['activePage'],
+                    'activeButton' => $params['activeButton'],
+    //                'actions' => $actions,
+                    'actions' => $params['actions'],
+                ],
+        ];
+        return $params;
+    }
+
+    public static function form($params)
+    {
+        $params = SystemController::params($params);
+        return view($params['form'],$params['params']);
     }
 }

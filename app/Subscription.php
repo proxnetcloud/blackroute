@@ -21,6 +21,10 @@ class Subscription extends Model
         'auto_block',
         'days_to_block',
         'comment',
+        'company_id',
+
+        //excluir do db
+//        'ap_ins','has_comododato',
 
 
         //'has_comodato',
@@ -84,6 +88,24 @@ class Subscription extends Model
         return $this->belongsTo('App\Client');
     }
 
+    /**
+     * Get the object that owns this.
+     */
+    //fica no Model que tem o id
+    public function plan()
+    {
+        return $this->belongsTo('App\Plan');
+    }
+
+    /**
+     * Get the record associated with this.
+     */
+    //fica no Model que NÃO tem o id
+    public function document()
+    {
+        return $this->hasOne('App\Document');
+    }
+
     // Para retornar os fillable
     //...pois não podem ser acessados externamente...
     //...pois são protected e para evitar possíveis...
@@ -125,7 +147,7 @@ class Subscription extends Model
         //'login', 'password',
         $field = 'password';
         $$field = [
-            'type' => 'password',
+            'type' => 'text',
             'name' => $field,
             'label' => 'Senha',
             'placeholder' => 'Senha',

@@ -15,15 +15,15 @@ class Change1580318445035Tables extends Migration
     {
         Schema::table('people', function (Blueprint $table) {
             //
-//            $table->integer('representative_id')->nullable();
-//            $table->dropColumn('representative_cpf');
+            $table->integer('representative_id')->nullable();
+            $table->dropColumn('representative_cpf');
         });
         Schema::table('addresses', function (Blueprint $table) {
             //
-//            $table->string('condominium')->nullable();
-//            $table->string('block')->nullable();
-//            $table->string('apartment')->nullable();
-//            $table->string('coordinates')->nullable();
+            $table->string('condominium')->nullable();
+            $table->string('block')->nullable();
+            $table->string('apartment')->nullable();
+            $table->string('coordinates')->nullable();
         });
         Schema::drop('subscriptions');
         Schema::create('subscriptions', function (Blueprint $table) {

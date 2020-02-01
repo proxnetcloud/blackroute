@@ -275,7 +275,8 @@
                                                                         $pos = strpos($mystring, $findme);
                                                                         $select['field'] = substr($mystring, 0,$pos);
                                                                     @endphp
-                                                                    <select type="text" onchange="f_{{$field['name']}}(this)" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>
+{{--                                                                    <select type="text" onchange="f_{{$field['name']}}(this)" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" required autofocus>--}}
+                                                                    <select type="text" onchange="f_{{$field['name']}}(this)" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}" >
                                                                         @foreach($field['options'] as $option)
                                                                             <option value="{{$option['value']}}">{{$option['text']}}</option>
 {{--                                                                        @foreach($actions as $action)--}}
@@ -381,7 +382,8 @@
                                                                             $field['value'] = '';
                                                                         }
                                                                     @endphp
-                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>
+{{--                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}" required autofocus>--}}
+                                                                    <input type="{{$field['type']}}" name="{{$field['name']}}" id="input-{{$field['name']}}" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ $field['placeholder']  }}" value="{{ $field['value'] }}">
 {{----}}
                                                                     @include('alerts.feedback', ['field' => 'name'])
                                                                 </div>

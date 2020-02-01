@@ -36,6 +36,14 @@ class Company extends Model
     /**
      * Get the records for this.
      */
+    public function clients()
+    {
+        return $this->hasMany('App\Client');
+    }
+
+    /**
+     * Get the records for this.
+     */
     public function documents()
     {
         return $this->hasMany('App\Document');

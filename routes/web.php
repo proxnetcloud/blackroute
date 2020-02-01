@@ -33,24 +33,30 @@ Route::get('/dash', 'HomeController@index')->name('dash');
 //    'user' => 'UserController'
 //]);
 
-$Models = ['Company','User','Client','Test','Dev'];
+$Models = ['Company','User','Client','Test','Dev','Tester'];
 foreach ($Models as $Model)
 {
-    Route::get('/'.strtolower($Model),
-        ucfirst(strtolower($Model)).'Controller@index')->name(strtolower($Model).'.index');
-    Route::get('/'.strtolower($Model).'/create',
-        ucfirst(strtolower($Model)).'Controller@create')->name(strtolower($Model).'.create');
-    Route::post('/'.strtolower($Model),
-        ucfirst(strtolower($Model)).'Controller@store')->name(strtolower($Model).'.store');
-    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}',
-        ucfirst(strtolower($Model)).'Controller@show')->name(strtolower($Model).'.show');
-    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}/edit',
-        ucfirst(strtolower($Model)).'Controller@edit')->name(strtolower($Model).'.edit');
-    Route::post('/'.strtolower($Model).'/{'.strtolower($Model).'}',
-        ucfirst(strtolower($Model)).'Controller@update')->name(strtolower($Model).'.update');
-    //Route::post('//{}/update', 'Controller@update')->name('.update');
-    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}/destroy',
-        ucfirst(strtolower($Model)).'Controller@destroy')->name(strtolower($Model).'.destroy');
+    Route::resources([
+//        'company' => 'CompanyController',
+//        'user' => 'UserController'
+        strtolower($Model) => ucfirst(strtolower($Model)).'Controller',
+    ]);
+
+//    Route::get('/'.strtolower($Model),
+//        ucfirst(strtolower($Model)).'Controller@index')->name(strtolower($Model).'.index');
+//    Route::get('/'.strtolower($Model).'/create',
+//        ucfirst(strtolower($Model)).'Controller@create')->name(strtolower($Model).'.create');
+//    Route::post('/'.strtolower($Model),
+//        ucfirst(strtolower($Model)).'Controller@store')->name(strtolower($Model).'.store');
+//    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}',
+//        ucfirst(strtolower($Model)).'Controller@show')->name(strtolower($Model).'.show');
+//    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}/edit',
+//        ucfirst(strtolower($Model)).'Controller@edit')->name(strtolower($Model).'.edit');
+//    Route::post('/'.strtolower($Model).'/{'.strtolower($Model).'}',
+//        ucfirst(strtolower($Model)).'Controller@update')->name(strtolower($Model).'.update');
+//    //Route::post('//{}/update', 'Controller@update')->name('.update');
+//    Route::get('/'.strtolower($Model).'/{'.strtolower($Model).'}/destroy',
+//        ucfirst(strtolower($Model)).'Controller@destroy')->name(strtolower($Model).'.destroy');
 
     // Model
 //    Route::get('/model', 'ModelController@index')->name('.index');
@@ -63,6 +69,11 @@ foreach ($Models as $Model)
 }
 Route::get('/client/create',
     'ClientController@create')->name('client.create');
+
+Route::get('/tester/form/client',
+    'TesterController@client')->name('tester.client');
+Route::get('/tester/client',
+    'TesterController@client')->name('tester.client2');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);

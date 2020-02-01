@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Address;
+use App\ONU;
 
-class AddressController extends Controller
+class ONUController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,25 +35,25 @@ class AddressController extends Controller
      * @return \Illuminate\Http\Response
      */
     // para permitir gerar alias
-    public function _1579914334590(Request $request)
+    public function _1580428992994(Request $request)
     {
-        return SystemController::__store(Address::class,$request);
+        return SystemController::__store(ONU::class,$request);
     }
+    //chamada de metodo sem redirect
     public function _store(Request $request)
     {
-        return $this->_1579914334590($request);
+        return $this->_1580428992994($request);
     }
     public function store(Request $request)
     {
         //
-        $return = $this->_1579914334590($request);
+        $return = $this->_1580428992994($request);
         if ( $return[0] == 'error' )
         {
-            return redirect()->back()->with('message','Ocorreu um erro #1579914334590 .');
+            return redirect()->back()->with('message','Ocorreu um erro #1580428992994 .');
         }
         return redirect()->back()->with('message',$request->_message);
     }
-
 
     /**
      * Display the specified resource.
@@ -85,29 +85,23 @@ class AddressController extends Controller
      * @return \Illuminate\Http\Response
      */
     // para permitir gerar alias
-    public function _1580500327017(Request $request,$id)
+    public function _1580476684677(Request $request,$id)
     {
-        echo json_encode($request);
-        echo '<br>';
-        echo 'id_address';
-        echo '<br>';
-        echo $id;
-        echo '<br>';
-        return SystemController::__update(Address::class,$id,$request);
+        return SystemController::__update(ONU::class,$id,$request);
     }
     public function _update(Request $request,$id)
     {
-        return $this->_1580500327017($request,$id);
+        return $this->_1580476684677($request,$id);
     }
     public function update(Request $request,$id)
     {
         //
 //        $return = $this->_123($request,$id);
 //        if ( $return[0] == 'error' )
-        $retorno = $this->_1580500327017($request,$id);
+        $retorno = $this->_1580476684677($request,$id);
         if ( $retorno[0] == 'error' )
         {
-            return redirect()->back()->with('message','Ocorreu um erro #1580500327017 .');
+            return redirect()->back()->with('message','Ocorreu um erro #1580476684677 .');
         }
         return redirect()->back()->with('message',$request->_message);
     }

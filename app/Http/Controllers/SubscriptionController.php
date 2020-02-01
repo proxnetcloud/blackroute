@@ -84,9 +84,26 @@ class SubscriptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // para permitir gerar alias
+    public function _1580497755852(Request $request,$id)
+    {
+        return SystemController::__update(Subscription::class,$id,$request);
+    }
+    public function _update(Request $request,$id)
+    {
+        return $this->_1580497755852($request,$id);
+    }
+    public function update(Request $request,$id)
     {
         //
+//        $return = $this->_123($request,$id);
+//        if ( $return[0] == 'error' )
+        $retorno = $this->_1580497755852($request,$id);
+        if ( $retorno[0] == 'error' )
+        {
+            return redirect()->back()->with('message','Ocorreu um erro #1580497755852 .');
+        }
+        return redirect()->back()->with('message',$request->_message);
     }
 
     /**

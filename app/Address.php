@@ -61,7 +61,7 @@ class Address extends Model
         //'address', 'number', 'zip', 'neighborhood', 'city', 'complement', 'state', 'country',
         $field = 'number';
         $$field = [
-            'type' => 'number',
+            'type' => 'text',
             'name' => $field,
             'label' => 'Número',
             'placeholder' => 'Número',

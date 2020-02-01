@@ -14,7 +14,7 @@ class Phone extends Model
      */
     //phone tem tabela especifica
     protected $fillable = [
-        'number','people_id',
+        'number','people_id','type',
     ];
 
     // Para retornar os fillable

@@ -53,11 +53,11 @@ class Metro_UTP extends Model
     //Para permitir a geração de aliases
     public static function _1580341162269()
     {
-        return (new MetroUTP())->fillable;
+        return (new Metro_UTP())->fillable;
     }
     public static function fields()
     {
-        return MetroUTP::_1580341162269();
+        return Metro_UTP::_1580341162269();
     }
 
     // Para permitir a geração do FrontEnd de forma automatizada
@@ -183,7 +183,7 @@ class Metro_UTP extends Model
         }
         $fields = $aux;
 
-        $fields = array_slice($fields, 1);
+//        $fields = array_slice($fields, 1);
         return [$fields];
     }
 }

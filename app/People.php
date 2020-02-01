@@ -15,7 +15,7 @@ class People extends Model
     //phone tem tabela especifica
     protected $fillable = [
         'name', 'cpf', 'rg', 'birth', 'email','person','representative_id','civil_state',
-        'juridica_type',
+        'juridica_type','mother_id','company_id',
     ];
 
     // Para retornar os fillable
@@ -134,7 +134,7 @@ class People extends Model
         //'birth', 'email','person','representative_cpf','civil_state',
         $field = 'email';
         $$field = [
-            'type' => 'email',
+            'type' => 'text',
             'name' => $field,
             'label' => 'Email',
             'placeholder' => 'email@email.com',

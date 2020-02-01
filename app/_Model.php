@@ -97,7 +97,9 @@ class _Model extends Model
         }
         $fields = $aux;
 
+        //pode dar erro por causa dessa linha que exclui o primeiro campo que podia ficar em branco para reuso
         $fields = array_slice($fields, 1);
+
         return [$fields];
 
         //novo modelo de campo

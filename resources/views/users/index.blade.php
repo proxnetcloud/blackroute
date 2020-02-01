@@ -61,7 +61,7 @@
                                                         @csrf
                                                         <a class="btn btn-link btn-danger " onclick="confirm('{{ __('Are you sure you want to delete this user?') }}') ? this.parentElement.submit() : ''"s><i class="fa fa-times"></i></a>
                                                     </form>
-                                                @else    
+                                                @else
                                                     <a href="{{ route('profile.edit', $user->id) }}" class="btn btn-link btn-warning edit d-inline-block"><i class="fa fa-edit"></i></a>
                                                 @endif
                                             </td>

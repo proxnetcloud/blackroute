@@ -70,11 +70,11 @@ class CTO_Port extends Model
     //Para permitir a geração de aliases
     public static function _1580332911194()
     {
-        return (new CTOPort())->fillable;
+        return (new CTO_Port())->fillable;
     }
     public static function fields()
     {
-        return CTOPort::_1580332911194();
+        return CTO_Port::_1580332911194();
     }
 
     // Para permitir a geração do FrontEnd de forma automatizada

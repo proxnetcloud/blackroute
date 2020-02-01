@@ -58,6 +58,15 @@ class Plan extends Model
         return $this->belongsTo('App\Company');
     }
 
+    /**
+     * Get the record associated with this.
+     */
+    //fica no Model que NÃO tem o id
+    public function subscription()
+    {
+        return $this->hasMany('App\Subscription');
+    }
+
     // Para permitir a geração do FrontEnd de forma automatizada
     // ... Principalmente formulários
     public static function form()
@@ -68,6 +77,9 @@ class Plan extends Model
         $options = [];
         foreach (\Auth::user()->company->plans as $plan) {
 //            $option = [
+            $erro = new Error();
+            $erro->value = $plan->id;
+            $erro->save();
             $options[] = [
                 'value' => $plan->id,
                 'text' => $plan->name,
